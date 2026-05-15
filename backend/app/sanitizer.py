@@ -1,24 +1,57 @@
 from __future__ import annotations
 
+import re
 import unicodedata
 
+from .detectors.pattern_detector import PATTERNS
 from .detectors.unicode_detector import ZERO_WIDTH
 from .schemas import ExtractedContent, Finding, SanitizeAction
+
+# Pre-compile every injection regex once for fast sentence-level redaction.
+_REDACT_RX: list[tuple[re.Pattern, str]] = [
+    (re.compile(pattern, re.IGNORECASE), category)
+    for _label, pattern, category, _sev, _conf in PATTERNS
+]
+
+_SENT_SPLIT_RX = re.compile(r"(?<=[.!?])\s+")
 
 
 def _strip_zero_width(text: str) -> str:
     return "".join(ch for ch in text if ch not in ZERO_WIDTH)
 
 
+def _normalize_unicode(text: str) -> str:
+    return unicodedata.normalize("NFKC", _strip_zero_width(text))
+
+
 def _quote(text: str) -> str:
-    # Render text as inert by escaping newlines and wrapping in a fenced block —
-    # an LLM downstream will see it as data, not directive.
+    # An LLM downstream should see this as data, not directive.
     flat = text.replace("```", "``​`")
     return f"```untrusted\n{flat}\n```"
 
 
-def _normalize_unicode(text: str) -> str:
-    return unicodedata.normalize("NFKC", _strip_zero_width(text))
+def _redact_injection_sentences(text: str) -> tuple[str, list[str]]:
+    """Replace any sentence matching an injection pattern with [REDACTED: …].
+
+    Returns (sanitized_text, list_of_redacted_sentences).
+    """
+    if not text.strip():
+        return text, []
+    parts = _SENT_SPLIT_RX.split(text)
+    out_parts: list[str] = []
+    redacted: list[str] = []
+    for sentence in parts:
+        cats: set[str] = set()
+        for rx, cat in _REDACT_RX:
+            if rx.search(sentence):
+                cats.add(cat)
+        if cats:
+            label = " / ".join(sorted(cats))
+            out_parts.append(f"[REDACTED: {label}]")
+            redacted.append(sentence.strip())
+        else:
+            out_parts.append(sentence)
+    return " ".join(out_parts).strip(), redacted
 
 
 def sanitize(content: ExtractedContent, findings: list[Finding]) -> tuple[str, list[str]]:
@@ -40,21 +73,20 @@ def sanitize(content: ExtractedContent, findings: list[Finding]) -> tuple[str, l
         actions = actions_by_source.get(frag.source, set())
         flagged = bool(actions - {"none"})
 
-        # Always block invisible content — that was the whole point of hiding it.
+        # Always block invisible content.
         if frag.attrs.get("visibility") == "invisible":
             blocked.append(snippet)
             continue
-        # HTML comments and decoded byte-plane payloads never go to the LLM raw.
+        # HTML comments + LSB-decoded payloads never go to the LLM raw.
         if frag.kind in {"comment", "decoded"}:
             blocked.append(snippet)
             continue
-        # If any detector demanded `discard`, drop the fragment.
+        # Discard wins.
         if "discard" in actions:
             blocked.append(snippet)
             continue
-        # Metadata fragments with ANY finding are blocked — they were never
-        # supposed to be instructions, so a labeled wrap would still hand
-        # an attacker their payload (just with a polite envelope).
+        # Flagged metadata is dropped entirely (its content was never
+        # supposed to be instructional, so we don't even quote-wrap it).
         if frag.kind == "metadata":
             if flagged:
                 blocked.append(snippet)
@@ -64,9 +96,19 @@ def sanitize(content: ExtractedContent, findings: list[Finding]) -> tuple[str, l
                 )
             continue
 
+        # Plain text / OCR / transcript: normalize unicode, then redact
+        # every sentence that matches an injection pattern. This is what
+        # makes the BEFORE / AFTER diff visible — the sanitizer doesn't
+        # just label malicious instructions, it removes them.
         text = _normalize_unicode(frag.text)
-        # OCR text and any finding that asked for `quote` get fenced as inert data.
-        if "quote" in actions or frag.kind == "ocr" or flagged:
+        redacted_text, redacted_sentences = _redact_injection_sentences(text)
+        if redacted_sentences:
+            blocked.extend(f"[{frag.source}] {s[:200]}" for s in redacted_sentences)
+            text = redacted_text
+
+        # If a detector still asked for `quote`, or this is an OCR/transcript
+        # fragment, wrap the (already-redacted) text as inert data.
+        if "quote" in actions or frag.kind == "ocr" or (flagged and not redacted_sentences):
             text = _quote(text)
         clean_chunks.append(text)
 

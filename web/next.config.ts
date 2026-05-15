@@ -12,13 +12,22 @@ const BACKEND = process.env.TRAPDOOR_API
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// Static export when deploying to Azure Static Web Apps free tier
+// (the frontend talks directly to the backend via NEXT_PUBLIC_API_BASE).
+// Set TRAPDOOR_STATIC_EXPORT=1 at build time to enable.
+const STATIC_EXPORT = process.env.TRAPDOOR_STATIC_EXPORT === "1";
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: __dirname,
   eslint: { ignoreDuringBuilds: true },
-  async rewrites() {
-    return [{ source: "/api/:path*", destination: `${BACKEND}/api/:path*` }];
-  },
+  ...(STATIC_EXPORT
+    ? { output: "export", trailingSlash: true, images: { unoptimized: true } }
+    : {
+        async rewrites() {
+          return [{ source: "/api/:path*", destination: `${BACKEND}/api/:path*` }];
+        },
+      }),
 };
 
 export default nextConfig;

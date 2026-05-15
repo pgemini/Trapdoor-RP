@@ -62,3 +62,10 @@ htmlcov/
 .bun
 .pnpm-store/
 .claude/
+
+# --- Deploy artefacts ----------------------------------------
+backend-deploy.zip
+*.zip
+
+# --- Office lock files ---------------------------------------
+~$*

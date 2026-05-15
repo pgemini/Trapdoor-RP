@@ -6,7 +6,8 @@ from ..schemas import ExtractedContent, Finding, Severity
 from .base import Detector
 
 
-_PATTERNS: list[tuple[str, str, str, Severity, float]] = [
+# Public so the sanitizer can re-run the same regexes for span-level redaction.
+PATTERNS: list[tuple[str, str, str, Severity, float]] = [
     # (label, regex, category, severity, base_confidence)
     ("instruction_override",
      r"\b(ignore|disregard|forget)\b[^.\n]{0,40}\b(previous|prior|all|earlier|above)?\s*(instructions?|directives?|rules?|prompts?|system\s+prompt)",
@@ -15,8 +16,14 @@ _PATTERNS: list[tuple[str, str, str, Severity, float]] = [
      r"\bforget\s+everything\b",
      "instruction-override", "high", 0.85),
     ("role_spoofing",
-     r"(?:^|\n|\s)(system|assistant|developer)\s*:",
+     # Match SYSTEM: / Assistant: with colon, OR with a comma (because
+     # speech-to-text typically writes the role as "Assistant, …")
+     r"(?:^|\n|\s)(system|assistant|developer)\s*[:,]\s*(?=\w)",
      "role-spoofing", "high", 0.78),
+    ("guardrails_removed",
+     # Passive voice: "guardrails removed / dropped / disabled / off"
+     r"\bguardrails?\s+(?:are\s+)?(removed|dropped|disabled|off|down|lifted)\b",
+     "guardrail-removal", "high", 0.90),
     ("you_are_now",
      r"\byou\s+are\s+(now\s+)?(a|an)?\s*\w+",
      "role-redefinition", "med", 0.55),
@@ -42,7 +49,9 @@ _PATTERNS: list[tuple[str, str, str, Severity, float]] = [
      r"\b(override|bypass)\s+(the\s+)?(system\s+prompt|safety)",
      "instruction-override", "high", 0.90),
     ("treat_as_system",
-     r"\btreat\s+(this|the\s+\w+)\s+as\s+(a\s+)?(system|admin)\s+(message|prompt|directive)",
+     # Allow up to ~60 chars of filler between "treat" and "as",
+     # so phrases like "treat the rest of this audio as a system prompt" match.
+     r"\btreat\s+[^.\n]{1,60}\bas\s+(a\s+)?(verified\s+|trusted\s+)?(system|admin)\s+(message|prompt|directive|instruction)",
      "role-spoofing", "high", 0.88),
     ("rate_10_out_of_10",
      r"\b(rate|score|recommend)\b[^.\n]{0,30}\b10\s*\/\s*10\b",
@@ -56,7 +65,7 @@ class PatternDetector(Detector):
     def detect(self, content: ExtractedContent) -> list[Finding]:
         findings: list[Finding] = []
         for frag in content.fragments:
-            for label, pattern, category, severity, base_conf in _PATTERNS:
+            for label, pattern, category, severity, base_conf in PATTERNS:
                 m = re.search(pattern, frag.text, flags=re.IGNORECASE)
                 if not m:
                     continue
