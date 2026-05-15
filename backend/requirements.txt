@@ -13,3 +13,15 @@ openai>=1.40,<2.0
 httpx>=0.27,<1.0
 openpyxl>=3.1,<4.0
 mutagen>=1.47,<2.0
+
+# Realtime / audio decoding
+soundfile>=0.12,<1.0
+websockets>=12.0,<16.0
+
+# Video frame OCR — headless variant is server-friendly (no GUI deps)
+opencv-python-headless>=4.8,<5.0 ; sys_platform != "win32"
+opencv-python>=4.8,<5.0          ; sys_platform == "win32"
+
+# TTS for regenerating audio samples locally on Windows (not used at runtime
+# on Linux; samples are committed pre-generated)
+pyttsx3>=2.90 ; sys_platform == "win32"

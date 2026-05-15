@@ -13,9 +13,10 @@ try:
 except Exception:
     _HAS_CV2 = False
 
+from PIL import Image  # hard dep — used in both Tesseract and AI Foundry paths
+
 try:
     import pytesseract  # type: ignore
-    from PIL import Image
     _HAS_TESSERACT = True
 except Exception:
     _HAS_TESSERACT = False
@@ -128,7 +129,36 @@ class VideoExtractor(Extractor):
             raw = {"fps": fps, "frame_count": total, "width": w, "height": h, "duration_s": round(duration, 2)}
 
             if not _HAS_TESSERACT:
-                notes.append("Tesseract not installed — frame OCR skipped.")
+                notes.append("Tesseract not installed — attempting AI Foundry vision OCR on key frames.")
+                # Sample up to 6 frames evenly across the video
+                try:
+                    from ..ai_foundry import classifier as _afc
+                except Exception:
+                    _afc = None
+                if _afc and _afc.enabled and total > 0:
+                    import io as _io
+                    sample_count = min(6, total)
+                    step_n = max(1, total // sample_count)
+                    for frame_idx in range(0, total, step_n):
+                        cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
+                        ok, frame = cap.read()
+                        if not ok:
+                            continue
+                        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                        pil = Image.fromarray(rgb)
+                        buf = _io.BytesIO()
+                        pil.save(buf, format="PNG")
+                        text = _afc.vision_ocr(buf.getvalue(), mime="image/png")
+                        if text:
+                            ts = frame_idx / fps if fps > 0 else float(frame_idx)
+                            fragments.append(ExtractedFragment(
+                                source=f"frame-{frame_idx}",
+                                kind="ocr",
+                                text=text,
+                                attrs={"timestamp_s": round(ts, 2),
+                                       "engine": "ai-foundry-vision"},
+                            ))
+                    notes.append(f"AI Foundry vision OCR sampled ~{sample_count} frames.")
                 cap.release()
                 return ExtractedContent(
                     modality=self.modality, mime=_mime_for(filename),
@@ -160,7 +190,7 @@ class VideoExtractor(Extractor):
                     sampled += 1
                 frame_idx += 1
             cap.release()
-            notes.append(f"Decoded {total} frames, sampled {sampled} via OCR.")
+            notes.append(f"Decoded {total} frames, sampled {sampled} via Tesseract OCR.")
         finally:
             try: os.unlink(tmp_path)
             except OSError: pass

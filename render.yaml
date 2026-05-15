@@ -1,0 +1,50 @@
+# Render.com blueprint — one-click deploy of the Trapdoor FastAPI backend.
+#
+#   1. Push this file to GitHub.
+#   2. On Render → New + → Blueprint → connect this repo.
+#   3. Render reads this YAML, provisions the service, and starts it.
+#   4. Set the secrets listed below in Render's "Environment" tab.
+#
+# Free tier notes:
+#   - Service sleeps after ~15 minutes of inactivity. First request after
+#     sleep takes 30–60 s while it cold-starts. Acceptable for demos.
+#   - 512 MB RAM / 0.1 CPU.
+#   - The backend has no persistent state — demo samples are committed
+#     to the repo under backend/samples/.
+
+services:
+  - type: web
+    name: trapdoor-api
+    runtime: python
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/healthz
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+
+      # ---- Azure AI Foundry (set as Render Secret) ----
+      - key: AZURE_OPENAI_ENDPOINT
+        sync: false
+      - key: AZURE_OPENAI_API_KEY
+        sync: false
+      - key: AZURE_OPENAI_DEPLOYMENT
+        value: gpt-4o
+      - key: AZURE_OPENAI_API_VERSION
+        value: "2024-12-01-preview"
+
+      # ---- Whisper transcription ----
+      - key: AZURE_WHISPER_DEPLOYMENT
+        value: whisper
+      - key: AZURE_REALTIME_ENDPOINT
+        sync: false
+
+      # ---- Trapdoor knobs ----
+      - key: TRAPDOOR_HOST
+        value: "0.0.0.0"
+      - key: TRAPDOOR_MAX_UPLOAD_MB
+        value: "25"

@@ -64,4 +64,6 @@ export interface SampleDescriptor {
 }
 
 export type SampleKey =
-  | "resume" | "invoice" | "memo" | "meme" | "readme" | "audio" | "excel";
+  | "resume" | "invoice" | "memo" | "meme" | "readme" | "audio" | "excel"
+  | "audio_voicemail" | "audio_meeting"
+  | "video_announcement" | "video_screen";

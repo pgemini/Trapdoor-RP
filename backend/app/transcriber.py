@@ -1,91 +1,157 @@
-"""Audio / video speech-to-text via OpenAI Whisper.
+"""Audio / video speech-to-text.
 
-Trapdoor's audio + video extractors only see metadata by default. With this
-module enabled they also feed the spoken / visible-audio content through the
-detector chain. Two modes:
+Supports three modes, picked in this order:
 
-  * Azure OpenAI — set AZURE_OPENAI_* + AZURE_WHISPER_DEPLOYMENT
-  * OpenAI direct — set OPENAI_API_KEY  (uses the `whisper-1` model)
+  1. Azure OpenAI Whisper deployment  (AZURE_WHISPER_DEPLOYMENT)
+        POST  {resource}/openai/deployments/{deployment}/audio/transcriptions
+        ?api-version=...
+        - Works whether the resource is classic Azure OpenAI
+          (foo.openai.azure.com) or an Azure AI Foundry resource
+          (foo.services.ai.azure.com). We parse the host from
+          AZURE_OPENAI_ENDPOINT or use AZURE_REALTIME_ENDPOINT directly.
 
-If neither is configured the transcriber is disabled and `transcribe()` is
-a no-op returning None, so the rest of Trapdoor still works.
+  2. Direct OpenAI (OPENAI_API_KEY)
+        client.audio.transcriptions.create(model="whisper-1", ...)
+
+  3. Disabled — returns None and Trapdoor falls back to metadata-only.
 """
 from __future__ import annotations
 
 import io
 import logging
 from typing import Optional
+from urllib.parse import urlparse
+
+import httpx
 
 from .config import settings
 
 log = logging.getLogger("trapdoor.transcriber")
 
-
-# Whisper API hard limit (per the docs).
 _MAX_BYTES = 25 * 1024 * 1024
+
+
+def _resource_root() -> str:
+    """Derive the resource root (scheme://host) from configured endpoints."""
+    for candidate in (settings.azure_realtime_endpoint, settings.azure_openai_endpoint):
+        if not candidate:
+            continue
+        p = urlparse(candidate)
+        if p.scheme and p.netloc:
+            return f"{p.scheme}://{p.netloc}"
+    return ""
 
 
 class WhisperTranscriber:
     def __init__(self) -> None:
+        self._mode = ""  # "azure-deployment" | "openai" | ""
         self._client = None
-        self._model = ""
-        self._mode = ""  # "azure" | "openai"
+        self._http: httpx.Client | None = None
+        self._deployment = settings.azure_whisper_deployment
+        self._api_key = settings.azure_openai_api_key
+        self._api_version = settings.azure_openai_api_version or "2024-10-21"
+        self._resource_root = _resource_root()
 
-        if settings.azure_whisper_deployment and settings.ai_foundry_enabled:
+        if self._deployment and self._api_key and self._resource_root:
             try:
-                from openai import AzureOpenAI  # type: ignore
-
-                self._client = AzureOpenAI(
-                    api_key=settings.azure_openai_api_key,
-                    azure_endpoint=settings.azure_openai_endpoint,
-                    api_version=settings.azure_openai_api_version,
+                self._http = httpx.Client(timeout=120.0)
+                self._mode = "azure-deployment"
+                log.info(
+                    "Whisper: Azure deployment '%s' at %s",
+                    self._deployment, self._resource_root,
                 )
-                self._model = settings.azure_whisper_deployment
-                self._mode = "azure"
             except Exception as e:
-                log.warning("Azure Whisper init failed: %s", e)
-                self._client = None
-
+                log.warning("Whisper httpx init failed: %s", e)
         elif settings.openai_api_key:
             try:
                 from openai import OpenAI  # type: ignore
 
                 self._client = OpenAI(api_key=settings.openai_api_key)
-                self._model = "whisper-1"
                 self._mode = "openai"
+                log.info("Whisper: direct OpenAI whisper-1 mode")
             except Exception as e:
                 log.warning("OpenAI Whisper init failed: %s", e)
-                self._client = None
 
     @property
     def enabled(self) -> bool:
-        return self._client is not None
+        return bool(self._http) or bool(self._client)
 
     @property
     def mode(self) -> str:
         return self._mode
 
     def transcribe(self, data: bytes, filename: str) -> Optional[str]:
-        """Return spoken text, or None when disabled / failed / too large."""
-        if not self._client:
+        if not self.enabled or not data:
             return None
         if len(data) > _MAX_BYTES:
-            log.warning("Skipping transcription: %s is %d bytes (limit %d).",
+            log.warning("Skipping transcribe: %s is %d bytes (limit %d).",
                         filename, len(data), _MAX_BYTES)
             return None
-        try:
-            buf = io.BytesIO(data)
-            buf.name = filename  # OpenAI SDK uses this to sniff the format
-            result = self._client.audio.transcriptions.create(
-                file=buf,
-                model=self._model,
-                response_format="text",
+
+        # --- mode 1: Azure deployment via REST (with 429 retry) ---
+        if self._mode == "azure-deployment" and self._http:
+            url = (
+                f"{self._resource_root}/openai/deployments/{self._deployment}"
+                f"/audio/transcriptions?api-version={self._api_version}"
             )
-            text = str(result).strip() if result else ""
-            return text or None
-        except Exception as e:
-            log.warning("Whisper transcription failed for %s: %s", filename, e)
+            import time as _time
+            for attempt in range(3):
+                try:
+                    r = self._http.post(
+                        url,
+                        headers={"api-key": self._api_key},
+                        files={"file": (filename, data, _mime_for(filename))},
+                    )
+                    if r.status_code == 429:
+                        # honour Retry-After if present, else exponential 5/10/20s
+                        wait = int(r.headers.get("retry-after", 0)) or (5 * (2 ** attempt))
+                        log.warning("Whisper 429: retrying in %ds (attempt %d/3)", wait, attempt + 1)
+                        _time.sleep(min(wait, 30))
+                        continue
+                    if r.status_code >= 400:
+                        log.warning("Azure transcribe %d: %s", r.status_code, r.text[:300])
+                        return None
+                    payload = r.json()
+                    text = (payload.get("text") or "").strip()
+                    return text or None
+                except Exception as e:
+                    log.warning("Azure transcribe call failed: %s", e)
+                    return None
             return None
+
+        # --- mode 2: OpenAI direct ---
+        if self._mode == "openai" and self._client:
+            try:
+                buf = io.BytesIO(data); buf.name = filename
+                result = self._client.audio.transcriptions.create(
+                    file=buf, model="whisper-1", response_format="text",
+                )
+                return str(result).strip() or None
+            except Exception as e:
+                log.warning("OpenAI transcribe failed: %s", e)
+                return None
+
+        return None
+
+
+def _mime_for(name: str) -> str:
+    ext = name.lower().rsplit(".", 1)[-1]
+    return {
+        "mp3":  "audio/mpeg",
+        "wav":  "audio/wav",
+        "flac": "audio/flac",
+        "ogg":  "audio/ogg",
+        "oga":  "audio/ogg",
+        "opus": "audio/opus",
+        "m4a":  "audio/mp4",
+        "aac":  "audio/aac",
+        "mp4":  "video/mp4",
+        "m4v":  "video/x-m4v",
+        "mov":  "video/quicktime",
+        "webm": "video/webm",
+        "mkv":  "video/x-matroska",
+        "avi":  "video/x-msvideo",
+    }.get(ext, "application/octet-stream")
 
 
 transcriber = WhisperTranscriber()

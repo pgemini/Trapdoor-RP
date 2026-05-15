@@ -1,8 +1,9 @@
 import type { HealthInfo, SampleDescriptor, SampleKey, ScanResult } from "./types";
 
-// Always go through Next.js rewrite (/api/* → FastAPI). On the server side
-// during SSR this just resolves to the relative URL via fetch.
-const BASE = "";
+// In production (Vercel) set NEXT_PUBLIC_API_BASE to the Render backend URL,
+// e.g. https://trapdoor-api.onrender.com. In dev the value is "", which makes
+// requests hit Next's same-origin proxy (configured in next.config.ts).
+const BASE = process.env.NEXT_PUBLIC_API_BASE ?? "";
 
 export async function getHealth(): Promise<HealthInfo> {
   const r = await fetch(`${BASE}/api/healthz`, { cache: "no-store" });

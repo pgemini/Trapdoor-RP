@@ -31,20 +31,9 @@ web/out/
 *.tsbuildinfo
 next-env.d.ts
 
-# --- Generated demo samples ---------------------------------
-backend/samples/*.pdf
-backend/samples/*.png
-backend/samples/*.jpg
-backend/samples/*.jpeg
-backend/samples/*.docx
-backend/samples/*.xlsx
-backend/samples/*.xlsm
-backend/samples/*.mp4
-backend/samples/*.mov
-backend/samples/*.webm
-backend/samples/*.wav
-backend/samples/*.mp3
-backend/samples/*.md
+# Demo samples are committed (pre-generated) so deployments don't need
+# pyttsx3 / opencv at build time. If you regenerate them locally, replace
+# the committed files via git add.
 
 # --- OS / editor ---------------------------------------------
 .DS_Store
