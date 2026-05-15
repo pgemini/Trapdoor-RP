@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 290" role="img" aria-label="Tech Mahindra">
+  <!-- Slanted red parallelogram mark -->
+  <polygon points="60,30 270,30 230,260 20,260" fill="#E40029"/>
+
+  <!-- TECH (dark, uppercase, bold sans) -->
+  <text x="320" y="135"
+        font-family="Inter, Arial, Helvetica, sans-serif"
+        font-weight="900"
+        font-size="116"
+        letter-spacing="2"
+        fill="#1A1A1A">TECH</text>
+
+  <!-- mahindra (red, rounded sans, slightly lighter weight) -->
+  <text x="320" y="248"
+        font-family="Inter, Arial, Helvetica, sans-serif"
+        font-weight="700"
+        font-size="116"
+        letter-spacing="0"
+        fill="#E40029">mahindra</text>
+</svg>

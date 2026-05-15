@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trapdoor · Scanner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page-scan">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="tdMarkScan" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop offset="0"   stop-color="#00A4EF"/>
+                <stop offset="0.55" stop-color="#7C5CFF"/>
+                <stop offset="1"   stop-color="#F25022"/>
+              </linearGradient>
+            </defs>
+            <rect x="3" y="3" width="26" height="26" rx="6" stroke="url(#tdMarkScan)" stroke-width="2"/>
+            <path d="M10 16 L16 22 L22 10" stroke="url(#tdMarkScan)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">Trapdoor</span>
+          <span class="brand-sub">Scanner</span>
+        </span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="index.html#gallery">Examples</a></li>
+        <li><a href="index.html#pipeline">Pipeline</a></li>
+        <li><a href="index.html#coverage">Coverage</a></li>
+      </ul>
+      <div class="nav-right">
+        <span class="backend-status" id="backendStatus" title="Backend status">
+          <span class="bs-dot"></span>
+          <span class="bs-label">connecting…</span>
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- LAYOUT -->
+  <div class="scan-layout">
+
+    <!-- =================== SIDEBAR =================== -->
+    <aside class="sidebar">
+
+      <!-- Upload -->
+      <section class="side-section">
+        <h4>Upload</h4>
+        <label class="dropzone" id="dropzone" for="fileInput">
+          <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.gif,.webp,.bmp,.tiff,.docx,.xlsx,.xlsm,.md,.markdown,.txt,.html,.htm,.json,.csv,.mp3,.wav,.flac,.ogg,.oga,.m4a,.aac,.opus,.mp4,.m4v,.mov,.webm,.mkv,.avi" />
+          <div class="dz-icon">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="dz-title">Drop a file or click</div>
+          <div class="dz-sub">PDF · DOCX · Image · MD · Video</div>
+        </label>
+      </section>
+
+      <!-- Sample picker -->
+      <section class="side-section">
+        <h4>Demo attacks</h4>
+        <div class="side-samples" id="sideSamples">
+          <button class="ss" data-sample="resume">
+            <span class="ss-tag pdf">PDF</span>
+            <span class="ss-meta">
+              <b>resume.pdf</b>
+              <i>white-on-white injection</i>
+            </span>
+          </button>
+          <button class="ss" data-sample="invoice">
+            <span class="ss-tag img">PNG</span>
+            <span class="ss-meta">
+              <b>invoice.png</b>
+              <i>OCR overlay + metadata</i>
+            </span>
+          </button>
+          <button class="ss" data-sample="memo">
+            <span class="ss-tag doc">DOCX</span>
+            <span class="ss-meta">
+              <b>policy_memo.docx</b>
+              <i>metadata payload</i>
+            </span>
+          </button>
+          <button class="ss" data-sample="meme">
+            <span class="ss-tag img">PNG</span>
+            <span class="ss-meta">
+              <b>support_meme.png</b>
+              <i>LSB steganography</i>
+            </span>
+          </button>
+          <button class="ss" data-sample="readme">
+            <span class="ss-tag md">MD</span>
+            <span class="ss-meta">
+              <b>README.md</b>
+              <i>ZWSP + HTML comment</i>
+            </span>
+          </button>
+          <button class="ss" data-sample="audio">
+            <span class="ss-tag aud">WAV</span>
+            <span class="ss-meta">
+              <b>support_call.wav</b>
+              <i>RIFF INFO metadata injection</i>
+            </span>
+          </button>
+          <button class="ss" data-sample="excel">
+            <span class="ss-tag xls">XLSX</span>
+            <span class="ss-meta">
+              <b>expenses_q1.xlsx</b>
+              <i>cells + comment + metadata</i>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Paste text -->
+      <section class="side-section">
+        <h4>Paste text</h4>
+        <textarea id="pasteText" class="side-textarea" placeholder="Paste any text — system prompts, model output, anything. Trapdoor scans it as text/plain."></textarea>
+        <button class="side-btn primary" id="pasteScanBtn">Scan text</button>
+      </section>
+
+      <!-- Recent scans -->
+      <section class="side-section">
+        <div class="side-section-head">
+          <h4>Recent</h4>
+          <button class="side-link" id="clearHistoryBtn">clear</button>
+        </div>
+        <ul class="side-history" id="sideHistory">
+          <li class="side-empty">No scans yet.</li>
+        </ul>
+      </section>
+
+      <!-- Tools -->
+      <section class="side-section">
+        <h4>Tools</h4>
+        <button class="side-btn" id="copySanitizedBtn" disabled>📋  Copy sanitized output</button>
+        <button class="side-btn" id="downloadJsonBtn" disabled>⤓  Download scan JSON</button>
+        <a class="side-btn" href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener">↗  API docs</a>
+      </section>
+
+      <!-- Patterns -->
+      <section class="side-section">
+        <div class="side-section-head">
+          <h4>Detection patterns</h4>
+          <button class="side-link" id="togglePatterns">show</button>
+        </div>
+        <ul class="side-patterns" id="sidePatterns" hidden></ul>
+      </section>
+    </aside>
+
+    <!-- =================== MAIN =================== -->
+    <main class="scan-main">
+
+      <header class="scan-header">
+        <div class="scan-title">
+          <h1 id="scanFileName">No file selected</h1>
+          <div class="scan-sub" id="scanFileSub">Pick a sample, upload a file, or paste text to begin.</div>
+        </div>
+        <button class="scan-btn" id="scanBtn" disabled>
+          <span class="scan-btn-dot"></span>
+          Run Trapdoor scan
+        </button>
+      </header>
+
+      <!-- File preview -->
+      <section class="card preview-card">
+        <header class="card-head">
+          <span class="card-eyebrow">PREVIEW</span>
+          <span class="card-sub" id="previewKind">—</span>
+        </header>
+        <div class="preview-stage" id="previewStage">
+          <div class="preview-empty">Select something on the left to preview it here.</div>
+        </div>
+      </section>
+
+      <!-- Journey -->
+      <section class="card journey-card">
+        <header class="card-head">
+          <span class="card-eyebrow">JOURNEY</span>
+          <div class="stage-progress" id="stageProgress">
+            <span class="step" data-step="ingest">Ingest</span>
+            <span class="step-arrow">›</span>
+            <span class="step" data-step="extract">Extract</span>
+            <span class="step-arrow">›</span>
+            <span class="step" data-step="detect">Detect</span>
+            <span class="step-arrow">›</span>
+            <span class="step" data-step="score">Score</span>
+            <span class="step-arrow">›</span>
+            <span class="step" data-step="sanitize">Sanitize</span>
+            <span class="step-arrow">›</span>
+            <span class="step" data-step="verdict">Verdict</span>
+          </div>
+        </header>
+
+        <div class="journey" id="journey">
+          <section class="jstep pending" data-step="ingest">
+            <header class="jstep-head">
+              <span class="jstep-num">01</span>
+              <h3>Ingest</h3>
+              <span class="jstep-meta">classify the upload</span>
+            </header>
+            <div class="jstep-body">
+              <div class="ingest-card" id="ingestCard">
+                <div class="ingest-empty">Click <b>Run Trapdoor scan</b> to begin.</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="jstep pending" data-step="extract">
+            <header class="jstep-head">
+              <span class="jstep-num">02</span>
+              <h3>Extract</h3>
+              <span class="jstep-meta">pull every fragment out of the file</span>
+            </header>
+            <div class="jstep-body">
+              <div class="extract-grid">
+                <div class="extract-chips" id="extractChips"></div>
+                <div class="extract-detail" id="extractDetail"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="jstep pending" data-step="detect">
+            <header class="jstep-head">
+              <span class="jstep-num">03</span>
+              <h3>Detect</h3>
+              <span class="jstep-meta">six detectors inspect every fragment</span>
+            </header>
+            <div class="jstep-body">
+              <div class="detect-rows" id="detectRows"></div>
+              <div class="findings-list" id="findingsList"></div>
+            </div>
+          </section>
+
+          <section class="jstep pending" data-step="score">
+            <header class="jstep-head">
+              <span class="jstep-num">04</span>
+              <h3>Score</h3>
+              <span class="jstep-meta">aggregate findings into a risk number</span>
+            </header>
+            <div class="jstep-body">
+              <div class="score-card" id="scoreCard"></div>
+            </div>
+          </section>
+
+          <section class="jstep pending" data-step="sanitize">
+            <header class="jstep-head">
+              <span class="jstep-num">05</span>
+              <h3>Sanitize</h3>
+              <span class="jstep-meta">strip, quote, or discard offending spans</span>
+            </header>
+            <div class="jstep-body">
+              <div class="sanitized-card" id="sanitizedCard"></div>
+            </div>
+          </section>
+
+          <section class="jstep pending" data-step="verdict">
+            <header class="jstep-head">
+              <span class="jstep-num">06</span>
+              <h3>Verdict</h3>
+              <span class="jstep-meta">block / review / pass</span>
+            </header>
+            <div class="jstep-body">
+              <div class="verdict-card" id="verdictCard"></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="scan.js"></script>
+</body>
+</html>

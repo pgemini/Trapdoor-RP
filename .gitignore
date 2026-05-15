@@ -1,0 +1,75 @@
+# =============================================================
+# Trapdoor — root .gitignore
+# =============================================================
+
+# --- Secrets (never commit) ----------------------------------
+.env
+.env.local
+*.env.local
+backend/.env
+**/secrets.*
+
+# --- Python --------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+backend/.venv/
+
+# --- Node / Next.js ------------------------------------------
+node_modules/
+web/node_modules/
+.next/
+web/.next/
+out/
+web/out/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+
+# --- Generated demo samples ---------------------------------
+backend/samples/*.pdf
+backend/samples/*.png
+backend/samples/*.jpg
+backend/samples/*.jpeg
+backend/samples/*.docx
+backend/samples/*.xlsx
+backend/samples/*.xlsm
+backend/samples/*.mp4
+backend/samples/*.mov
+backend/samples/*.webm
+backend/samples/*.wav
+backend/samples/*.mp3
+backend/samples/*.md
+
+# --- OS / editor ---------------------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Logs ----------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Build artefacts ----------------------------------------
+dist/
+build/
+.coverage
+htmlcov/
+
+# --- Misc ----------------------------------------------------
+*.local
+.bun
+.pnpm-store/
+.claude/
