@@ -12,6 +12,10 @@ interface HealthShape {
   transcription?: { enabled?: boolean };
 }
 
+// Static export builds bake this in at build time; dev / same-origin
+// deployments leave it empty so requests hit the Next.js rewrite proxy.
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "";
+
 export function BackendStatus({ className }: { className?: string }) {
   const [status, setStatus] = useState<Status>("connecting");
   const [label, setLabel] = useState<string>("connecting…");
@@ -21,7 +25,7 @@ export function BackendStatus({ className }: { className?: string }) {
 
     async function tick() {
       try {
-        const r = await fetch("/api/healthz", { cache: "no-store" });
+        const r = await fetch(`${API_BASE}/api/healthz`, { cache: "no-store" });
         if (!r.ok) throw new Error(`status ${r.status}`);
         const data: HealthShape = await r.json();
         if (cancelled) return;
