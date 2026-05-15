@@ -20,8 +20,8 @@ const MEMBERS: Member[] = [
     gradient: "linear-gradient(135deg, #00a4ef 0%, #7c5cff 100%)",
   },
   {
-    initials: "PR",
-    name: "Prateek",
+    initials: "PG",
+    name: "Prateek Gemini",
     role: "Platform & UI",
     team: "Security Innovation",
     gradient: "linear-gradient(135deg, #7c5cff 0%, #f25022 100%)",

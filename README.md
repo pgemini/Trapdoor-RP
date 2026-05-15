@@ -121,4 +121,4 @@ GET  /api/samples/{key}/download        → download the raw demo file
 
 ## Team
 
-Ravi Bansal · Prateek
+Ravi Bansal · Prateek Gemini
