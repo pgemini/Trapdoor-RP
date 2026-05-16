@@ -315,7 +315,7 @@ function renderDetect(result) {
             </div>
             <div class="det-count">scanning…</div>
             <div class="det-tag">SCAN</div>
-            <div class="det-chev" aria-hidden="true">›</div>
+            <div class="det-chev" aria-hidden="true">▸</div>
           </button>
           <div id="${panelId}" class="detect-row-panel" hidden></div>
         `;
