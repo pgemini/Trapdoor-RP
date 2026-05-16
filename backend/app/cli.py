@@ -168,6 +168,31 @@ def _print_findings(rep: FileReport, c: Colors, min_sev: int) -> None:
         )
 
 
+def _print_fragments(rep: FileReport, c: Colors) -> None:
+    if not rep.result:
+        return
+    fragments = rep.result.extracted_fragments or []
+    if not fragments:
+        print(f"    {c.dim}(extractor produced 0 fragments — nothing to scan){c.reset}")
+        return
+    for fr in fragments:
+        text = fr.text.replace("\n", " ").strip()
+        if len(text) > 100:
+            text = text[:97] + "..."
+        attrs = ""
+        if fr.attrs.get("visibility") == "invisible":
+            attrs = f" {c.yellow}[invisible]{c.reset}"
+        print(f"    {c.dim}[{fr.kind:<8}]{c.reset} {fr.source:<22} {text}{attrs}")
+
+
+def _print_extract_notes(rep: FileReport, c: Colors) -> None:
+    if not rep.result:
+        return
+    for stage in rep.result.stages:
+        if stage.name == "extract:note" and stage.detail:
+            print(f"    {c.dim}note:{c.reset} {stage.detail}")
+
+
 # --- main --------------------------------------------------------------------
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -189,7 +214,12 @@ def _build_parser() -> argparse.ArgumentParser:
     p.add_argument("--workers", "-j", type=int, default=4,
                    help="Parallel worker threads (default: 4).")
     p.add_argument("--verbose", "-v", action="count", default=0,
-                   help="Show findings under each flagged file. -vv shows info-level findings.")
+                   help="Show findings under each flagged file. -vv shows info-level findings "
+                        "and extractor notes (e.g. 'no transcription engine configured').")
+    p.add_argument("--show-fragments", action="store_true",
+                   help="After each file, print the fragments the extractor produced "
+                        "(kind / source / text preview). Helps diagnose silent passes — "
+                        "especially audio files with no transcription backend.")
     p.add_argument("--block-only", action="store_true",
                    help="Only print blocked files (suppress pass/review).")
     p.add_argument("--json", action="store_true",
@@ -286,6 +316,10 @@ def main(argv: list[str] | None = None) -> int:
         print(_format_line(rel, rep, c))
         if args.verbose and r.findings:
             _print_findings(rep, c, min_sev_print)
+        if args.verbose >= 2:
+            _print_extract_notes(rep, c)
+        if args.show_fragments:
+            _print_fragments(rep, c)
 
     # Scan (parallel) — preserve ordering by submitting then printing as ready.
     if args.workers <= 1 or len(files) <= 1:
