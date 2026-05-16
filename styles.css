@@ -1156,16 +1156,35 @@ em { font-style: italic; color: #fff; }
 /* ============ DETECT ROWS ============ */
 .detect-rows { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
 .detect-row {
-  display: grid; grid-template-columns: 22px 1fr 80px 76px;
-  align-items: center; gap: 12px;
-  padding: 10px 14px;
+  display: flex; flex-direction: column;
   border-radius: 10px;
   background: rgba(255,255,255,0.02);
   border: 1px solid var(--line);
   font-size: 13px;
   opacity: 0; transform: translateY(4px);
   animation: rowIn 0.32s ease forwards;
+  overflow: hidden;
 }
+.detect-row-trigger {
+  display: grid; grid-template-columns: 22px 1fr auto 76px 14px;
+  align-items: center; gap: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.detect-row-trigger:disabled { cursor: default; }
+.detect-row-trigger:not(:disabled):hover { background: rgba(255,255,255,0.025); }
+.detect-row-trigger:focus-visible { outline: 2px solid var(--ms-blue); outline-offset: -2px; }
+.detect-row.expanded .detect-row-trigger { background: rgba(255,93,108,0.06); }
+
+.det-meta { display: flex; align-items: baseline; min-width: 0; }
+
 .detect-row .det-ic {
   width: 18px; height: 18px; border-radius: 50%;
   background: rgba(255,255,255,0.06);
@@ -1203,6 +1222,30 @@ em { font-style: italic; color: #fff; }
 .detect-row.found    .det-tag { color: var(--danger); background: rgba(255,93,108,0.14); }
 .detect-row.clean    .det-tag { color: var(--ok); background: rgba(67,213,157,0.12); }
 .detect-row.skipped  .det-tag { color: var(--dim); }
+
+.det-chev {
+  font-size: 14px; line-height: 1;
+  color: var(--muted);
+  transition: transform 0.2s ease, color 0.2s ease;
+  opacity: 0;
+}
+.detect-row.found .det-chev { opacity: 0.85; color: var(--danger); }
+.detect-row.expanded .det-chev { transform: rotate(90deg); }
+
+.detect-row-panel {
+  padding: 4px 14px 14px;
+  border-top: 1px dashed var(--line);
+  display: flex; flex-direction: column; gap: 8px;
+  animation: panelIn 0.22s ease;
+}
+.detect-row-panel[hidden] { display: none; }
+.detect-row-panel .finding {
+  margin: 0;
+}
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 /* ============ SCORE GAUGE ============ */
 .score-card {

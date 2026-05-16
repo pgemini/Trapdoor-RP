@@ -443,19 +443,30 @@ function renderDetect(result) {
   return new Promise(resolve => {
     DETECTORS.forEach((det, i) => {
       setTimeout(() => {
+        const panelId = `det-panel-${det.name.replace(/[^a-z0-9-]/gi, "-")}`;
         const row = document.createElement("div");
         row.className = "detect-row scanning";
         row.innerHTML = `
-          <div class="det-ic">◌</div>
-          <div><span class="det-name">${escapeHtml(det.name)}</span><span class="det-desc">${escapeHtml(det.desc)}</span></div>
-          <div class="det-count">scanning…</div>
-          <div class="det-tag">SCAN</div>
+          <button type="button" class="detect-row-trigger"
+                  aria-expanded="false" aria-controls="${panelId}" disabled>
+            <div class="det-ic">◌</div>
+            <div class="det-meta">
+              <span class="det-name">${escapeHtml(det.name)}</span>
+              <span class="det-desc">${escapeHtml(det.desc)}</span>
+            </div>
+            <div class="det-count">scanning…</div>
+            <div class="det-tag">SCAN</div>
+            <div class="det-chev" aria-hidden="true">›</div>
+          </button>
+          <div id="${panelId}" class="detect-row-panel" hidden></div>
         `;
         rows.appendChild(row);
         setTimeout(() => {
           const found = findingsByDet.get(det.name) || [];
           const stg = stagesByDet.get(det.name);
           const skipped = stg && stg.status === "skipped";
+          const trigger = row.querySelector(".detect-row-trigger");
+          const panel = row.querySelector(".detect-row-panel");
           row.classList.remove("scanning");
           if (skipped) {
             row.classList.add("skipped");
@@ -467,6 +478,9 @@ function renderDetect(result) {
             row.querySelector(".det-ic").textContent = "✗";
             row.querySelector(".det-count").textContent = `${found.length} finding${found.length>1?"s":""}`;
             row.querySelector(".det-tag").textContent = "HIT";
+            panel.innerHTML = found.map(findingCardHTML).join("");
+            trigger.disabled = false;
+            trigger.addEventListener("click", () => toggleDetectRow(row, trigger, panel));
           } else {
             row.classList.add("clean");
             row.querySelector(".det-ic").textContent = "✓";
@@ -483,13 +497,14 @@ function renderDetect(result) {
   });
 }
 
-function renderFindingsList(findings) {
-  const el = $("#findingsList");
-  if (!findings.length) {
-    el.innerHTML = `<div class="findings-empty">No findings — file is clean.</div>`;
-    return;
-  }
-  el.innerHTML = findings.map(f => `
+function toggleDetectRow(row, trigger, panel) {
+  const open = row.classList.toggle("expanded");
+  trigger.setAttribute("aria-expanded", open ? "true" : "false");
+  panel.hidden = !open;
+}
+
+function findingCardHTML(f) {
+  return `
     <div class="finding s-${f.severity}">
       <div class="finding-head">
         <span class="finding-pill s-${f.severity}">${f.severity.toUpperCase()}</span>
@@ -501,7 +516,16 @@ function renderFindingsList(findings) {
       ${f.evidence ? `<div class="finding-evidence">${escapeHtml(f.evidence)}</div>` : ""}
       ${f.location ? `<div class="finding-loc">at <b>${escapeHtml(f.location)}</b> · action: ${f.sanitize_action}</div>` : ""}
     </div>
-  `).join("");
+  `;
+}
+
+function renderFindingsList(findings) {
+  const el = $("#findingsList");
+  if (!findings.length) {
+    el.innerHTML = `<div class="findings-empty">No findings — file is clean.</div>`;
+    return;
+  }
+  el.innerHTML = findings.map(findingCardHTML).join("");
 }
 
 const SEVERITY_WEIGHT = { info: 0.05, low: 0.20, med: 0.45, high: 0.75, critical: 0.95 };
