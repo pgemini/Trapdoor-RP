@@ -400,7 +400,7 @@ function centredGrid({ cols, rows, cardW, cardH, gx, gy, startY, slideW = W }) {
   const layers = [
     { lbl: "PRESENTATION", t: "Next.js 15 · React 19 · Tailwind · Framer Motion",
       d: "Static export on Azure Static Web Apps (Free). Talks to the backend via NEXT_PUBLIC_API_BASE." },
-    { lbl: "TRAPDOOR API", t: "FastAPI · Pydantic · 5 extractors · 6 detectors · sanitizer",
+    { lbl: "TRAPDOOR API", t: "FastAPI · Pydantic · 5 extractors · 10 detectors · sanitizer",
       d: "Stateless. <800 ms median scan. Container-deployable. App Service F1 today." },
     { lbl: "AI / SPEECH",  t: "Azure AI Foundry · gpt-4o · whisper",
       d: "Vision OCR + injection classification. Whisper transcribes audio + video." },
@@ -441,7 +441,7 @@ function centredGrid({ cols, rows, cardW, cardH, gx, gy, startY, slideW = W }) {
 {
   const s = contentSlide(
     "ATTACK COVERAGE",
-    "13 categories · 7 modalities · 6 detectors.",
+    "17 categories · 7 modalities · 10 detectors.",
     null,
     6
   );
@@ -880,7 +880,7 @@ function centredGrid({ cols, rows, cardW, cardH, gx, gy, startY, slideW = W }) {
     ["Can it be bypassed?",
      "No layer is unbypassable. Trapdoor stacks 6 independent detectors — an attacker has to defeat all simultaneously."],
     ["Does it work offline / air-gapped?",
-     "Heuristic-only mode requires zero external calls. 5 of 6 detectors work fully offline."],
+     "Heuristic-only mode requires zero external calls. 9 of 10 detectors work fully offline."],
     ["Does the AI Foundry call leak our content?",
      "Calls go to YOUR Foundry project under your Azure DPA. Nothing transits a shared endpoint."],
     ["Non-English content?",

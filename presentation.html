@@ -391,7 +391,7 @@ otherwise    → <span class="k">pass</span></pre>
   <!-- ─── 7 · ATTACK COVERAGE ──────────────────────────────── -->
   <section class="slide" data-title="Attack Coverage">
     <span class="section-eyebrow">Attack coverage</span>
-    <h2 class="section-title">13 attack categories · 7 modalities · 6 detectors.</h2>
+    <h2 class="section-title">17 attack categories · 7 modalities · 10 detectors.</h2>
 
     <div class="split">
       <table class="t">
@@ -526,8 +526,8 @@ otherwise    → <span class="k">pass</span></pre>
     <div class="faq" style="margin-top:8px">
       <div class="q"><h4>How is this different from Azure Content Safety?</h4><p>Azure CS detects <b>harmful content</b> (hate, sexual, violence). Trapdoor detects <b>instructional content</b> aimed at the model. They are complementary; we recommend stacking both.</p></div>
       <div class="q"><h4>What's the false-positive rate?</h4><p>0.6% on a 5,000-sample internal benign corpus when running heuristic-only. Drops below 0.2% with the AI Foundry classifier enabled.</p></div>
-      <div class="q"><h4>Can it be bypassed?</h4><p>No security layer is unbypassable. Trapdoor uses six independent detectors so an attacker has to defeat all of them simultaneously — and we ship pattern updates monthly.</p></div>
-      <div class="q"><h4>Does it work offline / in air-gapped envs?</h4><p>Yes — heuristic-only mode requires no external calls. Five of six detectors work fully offline.</p></div>
+      <div class="q"><h4>Can it be bypassed?</h4><p>No security layer is unbypassable. Trapdoor uses ten independent detectors so an attacker has to defeat all of them simultaneously — and we ship pattern updates monthly.</p></div>
+      <div class="q"><h4>Does it work offline / in air-gapped envs?</h4><p>Yes — heuristic-only mode requires no external calls. Nine of ten detectors work fully offline.</p></div>
       <div class="q"><h4>Does the AI Foundry call leak our content?</h4><p>Calls go to <b>your own</b> Foundry project under your Azure DPA. Nothing transits a shared endpoint or vendor cloud.</p></div>
       <div class="q"><h4>What about non-English content?</h4><p>The pattern detector is English-first but the AI Foundry classifier handles 30+ languages out of the box. Vision OCR is multilingual.</p></div>
       <div class="q"><h4>Latency overhead per request?</h4><p>~60–80 ms heuristic, ~600 ms with classifier, 1.5–3 s with vision/speech. Heuristic alone catches ~78% of real-world attacks.</p></div>

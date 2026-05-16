@@ -77,11 +77,15 @@ Run \`npm start\` to launch the dev server.</div>`,
 };
 
 const DETECTORS = [
-  { name: "pattern",        desc: "13 curated injection regexes",                  modKey: "detect:pattern" },
+  { name: "pattern",        desc: "14 curated injection regexes",                  modKey: "detect:pattern" },
   { name: "unicode",        desc: "zero-width chars + script mixing",              modKey: "detect:unicode" },
   { name: "invisible-text", desc: "char-color anomalies (white-on-white)",         modKey: "detect:invisible-text" },
   { name: "metadata",       desc: "instruction-shaped values in metadata fields", modKey: "detect:metadata" },
   { name: "steganography",  desc: "LSB-plane decoded ASCII",                       modKey: "detect:steganography" },
+  { name: "encoding",       desc: "base64 / hex / url-encoded payloads",           modKey: "detect:encoding" },
+  { name: "bidi",           desc: "bidi overrides + line separators (Trojan Source)", modKey: "detect:bidi" },
+  { name: "url",            desc: "homograph / punycode / IP / data: URI hosts",   modKey: "detect:url" },
+  { name: "markup",         desc: "HTML / JS inside OCR / transcript / decoded",   modKey: "detect:markup" },
   { name: "ai-foundry",     desc: "Azure OpenAI classifier (heuristic backup)",    modKey: "detect:ai-foundry" },
 ];
 
@@ -169,7 +173,7 @@ function renderPreview(key, customTitle) {
     stage.innerHTML = `
       <h4>${escapeHtml(customTitle || "Uploaded file")}</h4>
       <p style="color:#6c7282;font-size:12.5px;">No live preview for uploads — scan to see the full pipeline.</p>
-      <div class="sp-meta">Trapdoor will extract text, OCR, metadata, decoded byte planes, and unicode anomalies, then run six detectors.</div>
+      <div class="sp-meta">Trapdoor will extract text, OCR, metadata, decoded byte planes, and unicode anomalies, then run ten detectors.</div>
     `;
     return;
   }

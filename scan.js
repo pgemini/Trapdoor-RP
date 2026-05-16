@@ -44,11 +44,15 @@ const STATE = {
 };
 
 const DETECTORS = [
-  { name: "pattern",        desc: "13 curated injection regexes" },
+  { name: "pattern",        desc: "14 curated injection regexes" },
   { name: "unicode",        desc: "zero-width chars + script mixing" },
   { name: "invisible-text", desc: "char-color anomalies" },
   { name: "metadata",       desc: "instruction-shaped metadata fields" },
   { name: "steganography",  desc: "LSB-plane decoded ASCII" },
+  { name: "encoding",       desc: "base64 / hex / url-encoded payloads (decoded + re-scanned)" },
+  { name: "bidi",           desc: "bidi overrides + line/paragraph separators (Trojan Source)" },
+  { name: "url",            desc: "homograph / punycode / IP / data: URI hosts" },
+  { name: "markup",         desc: "HTML / JS inside OCR / transcript / decoded text" },
   { name: "ai-foundry",     desc: "Azure OpenAI classifier" },
 ];
 
