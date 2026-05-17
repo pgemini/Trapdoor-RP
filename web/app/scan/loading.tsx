@@ -18,7 +18,7 @@ export default function Loading() {
         <div className="text-xl font-bold tracking-tight mb-1.5">
           Loading the <span className="text-gradient">scanner</span>…
         </div>
-        <div className="text-xs font-mono text-muted">extracting six detectors · two extractors · one trapdoor</div>
+        <div className="text-xs font-mono text-muted">extracting ten detectors · five extractors · one trapdoor</div>
 
         {/* indeterminate progress bar */}
         <div className="mt-6 mx-auto h-1 w-64 rounded-full bg-white/5 overflow-hidden relative">

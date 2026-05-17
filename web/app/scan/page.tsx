@@ -222,7 +222,7 @@ function ScanPageInner() {
                   : <Idle text="Waiting for the extractor." />}
               </JStep>
 
-              <JStep step="detect" num="03" title="Detect" meta="six detectors inspect every fragment"
+              <JStep step="detect" num="03" title="Detect" meta="ten detectors inspect every fragment"
                 running={journey.current === "detect"} done={journey.completed.has("detect")} alert={journey.alerts.has("detect")}>
                 {journey.completed.has("detect") && journey.result
                   ? <DetectPanel result={journey.result} />
