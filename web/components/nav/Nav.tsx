@@ -16,19 +16,19 @@ interface NavLink {
 }
 
 const LANDING_LINKS: NavLink[] = [
-  { label: "Scanner",  href: "/scan",     external: true },
-  { label: "Attacks",  href: "/attacks",  external: true },
-  { label: "Examples", href: "#gallery" },
-  { label: "Pipeline", href: "#pipeline" },
-  { label: "Coverage", href: "#coverage" },
+  { label: "Architecture", href: "#architecture" },
+  { label: "Detectors",    href: "#architecture" },
+  { label: "Attacks",      href: "#attacks" },
+  { label: "Benefits",     href: "#benefits" },
+  { label: "Pipeline",     href: "#pipeline" },
+  { label: "Scanner",      href: "/scan", external: true },
 ];
 
 const SCAN_LINKS: NavLink[] = [
-  { label: "Overview", href: "/#overview", external: true },
-  { label: "Scanner",  href: "/scan",      external: true },
-  { label: "Attacks",  href: "/attacks",   external: true },
-  { label: "Examples", href: "/#gallery",  external: true },
-  { label: "Pipeline", href: "/#pipeline", external: true },
+  { label: "Home",         href: "/",              external: true },
+  { label: "Architecture", href: "/#architecture", external: true },
+  { label: "Attacks",      href: "/#attacks",      external: true },
+  { label: "Benefits",     href: "/#benefits",     external: true },
 ];
 
 function BrandMark() {
