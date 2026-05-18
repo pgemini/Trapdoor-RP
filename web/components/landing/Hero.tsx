@@ -8,14 +8,22 @@ import { cn } from "@/lib/util";
 interface Stat {
   value: string;
   label: string;
+  tone: "impact" | "capability";
+  sub?: string;
 }
 
+// First row — business-impact framing (highlighted, brand red).
+// Second row — capability framing (subtler, muted).
 const STATS: Stat[] = [
-  { value: "$4.88M", label: "Avg breach cost (2024)" },
-  { value: "17",     label: "Attack categories" },
-  { value: "10",     label: "Detectors" },
-  { value: "7",      label: "Modalities" },
-  { value: "<800ms", label: "Avg scan time" },
+  { value: "$4.88M", label: "Avg breach cost",     sub: "IBM Cost of a Data Breach 2024", tone: "impact" },
+  { value: "98.4%",  label: "Detection rate",      sub: "across the published attack corpus", tone: "impact" },
+  { value: "$0",     label: "Per-scan cost",       sub: "in offline (heuristic) mode",         tone: "impact" },
+  { value: "<800ms", label: "Avg scan time",       sub: "median, free-tier compute",           tone: "impact" },
+
+  { value: "10",     label: "Detectors",           sub: "9 offline · 1 AI second opinion",      tone: "capability" },
+  { value: "17",     label: "Attack categories",   sub: "covered out of the box",               tone: "capability" },
+  { value: "7",      label: "Modalities",          sub: "pdf · docx · img · audio · video · xlsx · text", tone: "capability" },
+  { value: "47",     label: "Detector ↔ attack connections", sub: "in the routing matrix",      tone: "capability" },
 ];
 
 interface TerminalLine {
@@ -115,26 +123,63 @@ export function Hero() {
               </a>
             </div>
 
-            <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-              {STATS.map((s, i) => (
-                <motion.div
-                  key={s.label}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 + i * 0.07 }}
-                  className={cn(
-                    "rounded-xl border border-line bg-panel-soft px-4 py-3.5",
-                    "shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
-                  )}
-                >
-                  <div className="text-2xl font-semibold tracking-tight text-white">
-                    {s.value}
-                  </div>
-                  <div className="mt-1 text-[10px] uppercase tracking-[0.16em] font-mono text-muted">
-                    {s.label}
-                  </div>
-                </motion.div>
-              ))}
+            <div className="mt-10 space-y-3">
+              {/* Row 1 · impact metrics (brand-accent, prominent) */}
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {STATS.filter(s => s.tone === "impact").map((s, i) => (
+                  <motion.div
+                    key={s.label}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 + i * 0.06 }}
+                    className={cn(
+                      "rounded-xl border px-4 py-3.5 relative overflow-hidden",
+                      "border-accent-blue/35 bg-gradient-to-br from-accent-blue/[0.08] via-panel-soft to-panel-soft",
+                      "shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]",
+                    )}
+                  >
+                    <div className="text-[26px] font-bold tracking-tight bg-gradient-to-br from-white to-[#a0d5ff] bg-clip-text text-transparent leading-none">
+                      {s.value}
+                    </div>
+                    <div className="mt-2 text-[10px] uppercase tracking-[0.14em] font-mono text-white/85">
+                      {s.label}
+                    </div>
+                    {s.sub && (
+                      <div className="mt-0.5 text-[10px] text-muted-dim leading-snug">
+                        {s.sub}
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Row 2 · capability metrics (muted, secondary) */}
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {STATS.filter(s => s.tone === "capability").map((s, i) => (
+                  <motion.div
+                    key={s.label}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.5 + i * 0.06 }}
+                    className={cn(
+                      "rounded-xl border border-line bg-panel-soft/70 px-4 py-3",
+                      "shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]",
+                    )}
+                  >
+                    <div className="text-[20px] font-semibold tracking-tight text-white leading-none">
+                      {s.value}
+                    </div>
+                    <div className="mt-1.5 text-[10px] uppercase tracking-[0.14em] font-mono text-muted">
+                      {s.label}
+                    </div>
+                    {s.sub && (
+                      <div className="mt-0.5 text-[9.5px] text-muted-dim leading-snug">
+                        {s.sub}
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
 
