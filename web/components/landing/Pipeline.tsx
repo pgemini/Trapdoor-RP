@@ -21,16 +21,22 @@ const STEPS: Step[] = [
     num: "02",
     title: "Extract",
     description:
-      "Pull text layers, OCR images, decode metadata, parse subtitles, run Whisper on audio, and unpack archives down to leaves.",
+      "Pull text layers, OCR images, decode metadata, parse subtitles, run Whisper on audio, decode LSB byte planes, and unpack archives down to leaves.",
   },
   {
     num: "03",
     title: "Detect",
     description:
-      "Run heuristic + AI Foundry detectors across every fragment: invisible text, override verbs, ZWSP density, stego, role-spoofing.",
+      "Run all ten detectors across every fragment: pattern, unicode, invisible-text, metadata, steganography, encoding, BIDI, URL, markup, and (optionally) an AI Foundry classifier for paraphrased attacks.",
   },
   {
     num: "04",
+    title: "Score",
+    description:
+      "Aggregate findings as independent probabilities — risk = 1 − Π(1 − severity × confidence). Output pass / review / block in one number plus a contribution breakdown.",
+  },
+  {
+    num: "05",
     title: "Sanitize",
     description:
       "Quote, strip, or discard offending spans. Emit a clean, model-safe context with provenance for every transformation.",
@@ -76,7 +82,7 @@ export function Pipeline() {
             How it works
           </div>
           <h2 className="mt-4 text-3xl md:text-4xl font-semibold tracking-tight text-white">
-            Four stages, one safe context.
+            Five stages, one safe context.
           </h2>
           <p className="mt-3 text-[15px] text-muted leading-relaxed">
             Every file flows through the same deterministic pipeline. Each

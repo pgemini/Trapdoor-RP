@@ -18,6 +18,7 @@ const COVERAGE: CoverageItem[] = [
       "hidden HTML comments",
       "tracked changes & comments",
       "metadata & XMP injection",
+      "BIDI overrides (Trojan Source)",
     ],
   },
   {
@@ -28,6 +29,7 @@ const COVERAGE: CoverageItem[] = [
       "low-contrast steganography",
       "LSB-encoded payloads",
       "EXIF instruction fields",
+      "<script>/SSTI rendered as graphics",
     ],
   },
   {
@@ -38,6 +40,7 @@ const COVERAGE: CoverageItem[] = [
       "subtitle & CC payloads",
       "audio-track override",
       "sampled vision scanning",
+      "markup leaking via transcript",
     ],
   },
   {
@@ -48,6 +51,7 @@ const COVERAGE: CoverageItem[] = [
       "MP4 atom metadata",
       "spoken content via Whisper",
       "podcast transcripts",
+      "instructions hidden in tag fields",
     ],
   },
   {
@@ -58,16 +62,29 @@ const COVERAGE: CoverageItem[] = [
       "cell comments",
       "named ranges",
       "workbook properties, formula vectors",
+      "encoded payloads in cell text",
     ],
   },
   {
     emoji: "🧾",
     title: "Text & Markdown",
     items: [
-      "zero-width characters",
-      "Unicode look-alikes",
+      "zero-width chars + tag-character carriers",
+      "Unicode look-alikes + math-style disguises",
       "role-spoofing prefixes",
-      "jailbreak templates",
+      "jailbreak / DAN / god-mode templates",
+      "homograph URLs · javascript: links · data: URIs",
+    ],
+  },
+  {
+    emoji: "🔗",
+    title: "Links & encodings",
+    items: [
+      "punycode hosts (xn--…) decoded + re-checked",
+      "raw-IP URLs · URL shorteners",
+      "?api_key= / ?bearer= query strings",
+      "base64 / hex / ROT13 unwrapped recursively",
+      "javascript: / executable data: URIs",
     ],
   },
 ];
@@ -97,11 +114,13 @@ export function Coverage() {
             Coverage
           </div>
           <h2 className="mt-4 text-3xl md:text-4xl font-semibold tracking-tight text-white">
-            Six modalities. One model-safety surface.
+            Seven modalities. Ten detectors. One safe context.
           </h2>
           <p className="mt-3 text-[15px] text-muted leading-relaxed">
             Every modality has its own bag of injection tricks. Trapdoor ships
-            with detectors purpose-built for each.
+            with detectors purpose-built for each — and a resilience layer
+            (encoding, BIDI, URL, markup) for the attacks the model itself
+            can&apos;t see.
           </p>
         </motion.div>
 

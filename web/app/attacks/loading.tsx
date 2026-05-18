@@ -18,7 +18,7 @@ export default function Loading() {
         <div className="text-xl font-bold tracking-tight mb-1.5">
           Loading the <span className="text-gradient">attack catalog</span>…
         </div>
-        <div className="text-xs font-mono text-muted">13 categories · 7 modalities · one trapdoor</div>
+        <div className="text-xs font-mono text-muted">17 categories · 7 modalities · ten detectors</div>
         <div className="mt-6 mx-auto h-1 w-64 rounded-full bg-white/5 overflow-hidden relative">
           <motion.div
             className="h-full w-1/3 bg-grad rounded-full"

@@ -87,7 +87,7 @@ export default function AttacksPage() {
           </span>
           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-[1.1] mb-3">
             <ShieldAlert className="inline w-9 h-9 mr-2 -mt-2 text-accent-blue" />
-            <span className="text-gradient">13 ways</span> the LLM gets owned.
+            <span className="text-gradient">17 ways</span> the LLM gets owned.
           </h1>
           <p className="text-muted">
             Every category Trapdoor recognises, with a copy-paste-ready payload and the

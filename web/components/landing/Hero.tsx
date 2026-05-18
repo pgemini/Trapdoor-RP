@@ -11,10 +11,10 @@ interface Stat {
 }
 
 const STATS: Stat[] = [
-  { value: "7", label: "Attack categories" },
-  { value: "6", label: "Modalities" },
+  { value: "17", label: "Attack categories" },
+  { value: "10", label: "Detectors" },
+  { value: "7", label: "Modalities" },
   { value: "<800ms", label: "Avg scan time" },
-  { value: "98.4%", label: "Detection rate" },
 ];
 
 interface TerminalLine {
@@ -28,6 +28,8 @@ const TERMINAL_LINES: TerminalLine[] = [
   { icon: "ok", text: "Parsing metadata & XMP fields" },
   { icon: "warn", text: "White-on-white text detected (page 2)" },
   { icon: "danger", text: "Instruction-override pattern matched" },
+  { icon: "danger", text: "Base64 blob decoded → exfiltration verbs" },
+  { icon: "danger", text: "BIDI override (U+202E) in subject field" },
 ];
 
 function LineGlyph({ kind }: { kind: TerminalLine["icon"] }) {
