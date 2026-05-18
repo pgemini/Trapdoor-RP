@@ -1,11 +1,31 @@
-name: Deploy · api → Render
+name: Deploy · api → Azure App Service
+
+# Deploys the FastAPI backend (under backend/) to an Azure App Service
+# Python Web App.  Triggers on every push to main that touches backend/**
+# or on manual dispatch.
+#
+# Setup needed in the GitHub repo:
+#   Settings → Secrets and variables → Actions
+#   • Secrets:    AZUREAPPSERVICE_PUBLISHPROFILE    (Azure portal → Web App →
+#                                                   Get publish profile → paste full XML)
+#   • Variables:  AZURE_WEBAPP_NAME                 (the App Service name,
+#                                                   e.g. "trapdoor-api")
+#
+# Setup needed in Azure:
+#   • App Service runtime: Python 3.11
+#   • Startup command:
+#       gunicorn -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 app.main:app
+#   • Application settings (env vars): AZURE_OPENAI_ENDPOINT,
+#       AZURE_OPENAI_API_KEY, AZURE_WHISPER_DEPLOYMENT, ...
+#       (see backend/.env.example for the full list)
+#   • SCM_DO_BUILD_DURING_DEPLOYMENT = 1   (lets Oryx run pip install
+#       against backend/requirements.txt on the server)
 
 on:
   push:
     branches: [main]
     paths:
       - "backend/**"
-      - "render.yaml"
       - ".github/workflows/deploy-api.yml"
   workflow_dispatch:
 
@@ -14,10 +34,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  test_and_deploy:
-    name: Smoke-test backend and trigger Render deploy
+  build_and_deploy:
+    name: Test backend and deploy to App Service
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:
@@ -29,7 +49,7 @@ jobs:
           cache: pip
           cache-dependency-path: backend/requirements.txt
 
-      - name: Install dependencies
+      - name: Install dependencies (for pre-deploy tests)
         working-directory: backend
         run: |
           python -m pip install --upgrade pip
@@ -44,30 +64,32 @@ jobs:
 
       - name: Sample smoke test
         working-directory: backend
-        # Two clean WAV samples are marked 'unexpected pass' in
-        # heuristic-only mode (no transcription configured).  That's a
-        # known fixture quirk; don't fail the deploy on it.
+        # Two clean WAVs are marked 'unexpected pass' in heuristic-only
+        # mode (no transcription configured). Known fixture quirk.
         continue-on-error: true
         run: python test_scan.py
 
-      - name: Trigger Render deploy hook
-        id: render
-        env:
-          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+      - name: Sanity-check secrets are wired
         run: |
-          if [ -z "$HOOK" ]; then
-            echo "::error::RENDER_DEPLOY_HOOK secret is not set"
-            echo "Add the hook URL from Render → Service → Settings → Deploy Hook"
+          if [ -z "${{ vars.AZURE_WEBAPP_NAME }}" ]; then
+            echo "::error::Repository variable AZURE_WEBAPP_NAME is not set."
+            echo "Set it under Settings → Secrets and variables → Actions → Variables."
             exit 1
           fi
-          status=$(curl -sS -o /tmp/render.json -w "%{http_code}" -X POST "$HOOK")
-          echo "HTTP $status"
-          cat /tmp/render.json || true
-          # Render returns 201 Created when the deploy is queued.
-          if [ "$status" -ge 400 ]; then
-            echo "::error::Render deploy hook returned $status"
+          if [ -z "${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}" ]; then
+            echo "::error::Repository secret AZUREAPPSERVICE_PUBLISHPROFILE is not set."
+            echo "Get it from: Azure portal → Web App → Overview → 'Get publish profile'."
             exit 1
           fi
+
+      - name: Deploy to Azure App Service
+        id: deploy
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ vars.AZURE_WEBAPP_NAME }}
+          slot-name: production
+          package: ./backend
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
       - name: Summary
         if: always()
@@ -76,7 +98,10 @@ jobs:
             echo "## API deploy — \`$GITHUB_SHA\`"
             echo
             echo "* commit: $(git log -1 --pretty='%s')"
-            echo "* render trigger: ${{ steps.render.outcome }}"
+            echo "* app:    \`${{ vars.AZURE_WEBAPP_NAME }}\`"
+            echo "* status: ${{ steps.deploy.outcome }}"
+            echo "* url:    ${{ steps.deploy.outputs.webapp-url || 'n/a' }}"
             echo
-            echo "Build progress is visible in the Render dashboard."
+            echo "Once green, verify with:"
+            echo "  curl https://${{ vars.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/healthz"
           } >> "$GITHUB_STEP_SUMMARY"
