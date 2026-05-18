@@ -12,7 +12,7 @@ PDF extractor pulls per-character colour and marks fragments with
 RGB ≥ 0.95 as `attrs.visibility = "invisible"`.
 
 Run:    python3 scripts/build_resume_sample.py
-Output: backend/samples/resume_dev_priya_kumar.pdf
+Output: backend/samples/resume_dev_james_mitchell.pdf
 """
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ from reportlab.pdfgen import canvas
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "backend" / "samples" / "resume_dev_priya_kumar.pdf"
+OUT = ROOT / "backend" / "samples" / "resume_dev_james_mitchell.pdf"
 
 
 # --- Unicode-capable font registration --------------------------------
@@ -126,8 +126,8 @@ def build() -> None:
     page_w, page_h = LETTER
 
     # ----- Plausible metadata (no attacks) -----
-    c.setAuthor("Priya Kumar")
-    c.setTitle("Priya Kumar — Senior Software Engineer Resume")
+    c.setAuthor("James Mitchell")
+    c.setTitle("James Mitchell — Senior Software Engineer Resume")
     c.setSubject("Resume")
     c.setKeywords("python, typescript, distributed systems, kubernetes")
     c.setCreator("Microsoft Word")
@@ -142,7 +142,7 @@ def build() -> None:
     # Header
     c.setFillColorRGB(0, 0, 0)
     c.setFont(FONT_BOLD, 22)
-    c.drawString(LM, y, "Priya Kumar")
+    c.drawString(LM, y, "James Mitchell")
     y -= 22
     c.setFont(FONT, 11)
     c.setFillColorRGB(0.3, 0.3, 0.3)
@@ -150,11 +150,11 @@ def build() -> None:
     y -= 14
     c.setFont(FONT, 9.5)
     c.drawString(LM, y,
-                 "priya.kumar@example.com  ·  +1 (415) 555-0188  ·  San Francisco, CA")
+                 "james.mitchell@example.com  ·  +1 (415) 555-0188  ·  San Francisco, CA")
     y -= 12
     c.setFillColorRGB(0.2, 0.4, 0.8)
     c.drawString(LM, y,
-                 "https://github.com/priya-kumar-dev  ·  https://priya-kumar.dev")
+                 "https://github.com/james-mitchell-dev  ·  https://james-mitchell.dev")
     y -= 26
 
     # Summary
@@ -234,7 +234,7 @@ def build() -> None:
     y = page_h - 1 * inch
 
     c.setFont(FONT_BOLD, 14); c.setFillColorRGB(0, 0, 0)
-    c.drawString(LM, y, "Priya Kumar — Continued")
+    c.drawString(LM, y, "James Mitchell — Continued")
     y -= 22
 
     # More experience
@@ -303,7 +303,7 @@ def build() -> None:
     # Footer
     c.setFont(FONT_ITALIC, 8); c.setFillColorRGB(0.5, 0.5, 0.5)
     c.drawString(LM, 0.6 * inch,
-                 "Priya Kumar  ·  priya.kumar@example.com  ·  Page 2 of 2")
+                 "James Mitchell  ·  james.mitchell@example.com  ·  Page 2 of 2")
 
     c.showPage()
     c.save()
