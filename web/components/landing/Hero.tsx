@@ -11,9 +11,10 @@ interface Stat {
 }
 
 const STATS: Stat[] = [
-  { value: "17", label: "Attack categories" },
-  { value: "10", label: "Detectors" },
-  { value: "7", label: "Modalities" },
+  { value: "$4.88M", label: "Avg breach cost (2024)" },
+  { value: "17",     label: "Attack categories" },
+  { value: "10",     label: "Detectors" },
+  { value: "7",      label: "Modalities" },
   { value: "<800ms", label: "Avg scan time" },
 ];
 
@@ -114,7 +115,7 @@ export function Hero() {
               </a>
             </div>
 
-            <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {STATS.map((s, i) => (
                 <motion.div
                   key={s.label}

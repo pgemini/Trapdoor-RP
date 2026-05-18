@@ -8,7 +8,11 @@ import { Taglines }           from "@/components/landing/Taglines";
 import { Team }               from "@/components/landing/Team";
 import { Architecture }       from "@/components/landing/Architecture";
 import { BusinessBenefits }   from "@/components/landing/BusinessBenefits";
+import { BusinessValue }      from "@/components/landing/BusinessValue";
+import { WhyInnovative }      from "@/components/landing/WhyInnovative";
 import { AttackCatalogInline } from "@/components/landing/AttackCatalogInline";
+import Link from "next/link";
+import { ArrowRight, PlayCircle } from "lucide-react";
 
 export default function LandingPage() {
   return (
@@ -17,24 +21,37 @@ export default function LandingPage() {
       <main>
         <Hero />
 
-        <section id="demo" className="max-w-[1280px] mx-auto px-7 py-24">
+        {/* WHY INNOVATIVE — first impression after the hero */}
+        <section id="innovation" className="max-w-[1280px] mx-auto px-7 py-24">
           <SectionHead
-            eyebrow="Live demo"
-            title="Spot the hidden instruction."
-            subtitle="Drop in a file, paste a prompt, or pick one of the bundled attack samples. Trapdoor walks you through every step of the scan."
+            eyebrow="Why this is innovative"
+            title="Defence at the layer the LLM can't see."
+            subtitle="Most model-safety tooling lives inside the model. Trapdoor lives in front of it, with detectors that reason about codepoints, bytes, and channels — not just words."
           />
-          <CTATile />
+          <WhyInnovative />
         </section>
 
-        <section id="architecture" className="max-w-[1280px] mx-auto px-7 py-24">
+        {/* COVERAGE — moved up so the modality-vs-defence story lands early */}
+        <section id="coverage" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
           <SectionHead
-            eyebrow="Architecture"
+            eyebrow="Threat coverage"
+            title="Seven modalities. Ten detectors. One safe context."
+            subtitle="Documents, images, video, audio, spreadsheets, text, and the links and encodings woven through all of them — each gets the same deterministic pipeline."
+          />
+          <Coverage />
+        </section>
+
+        {/* TECH STACK & ARCHITECTURE — the interactive walkthrough */}
+        <section id="architecture" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
+          <SectionHead
+            eyebrow="Tech stack & architecture"
             title="Five stages. Ten detectors. One safe context."
-            subtitle="Every uploaded file flows through the same deterministic pipeline. Each stage emits a timed result so you can audit exactly where a finding was born — and which axis of the attack tripped it."
+            subtitle="Every uploaded file flows through the same deterministic pipeline. Each stage emits a timed result; click any card to see what it does, what it produces, and the exact attack it stops."
           />
           <Architecture />
         </section>
 
+        {/* PIPELINE — high-level 5-stage strip (kept for the spec mention) */}
         <section id="pipeline" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
           <SectionHead
             eyebrow="How it works"
@@ -44,15 +61,7 @@ export default function LandingPage() {
           <Pipeline />
         </section>
 
-        <section id="coverage" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
-          <SectionHead
-            eyebrow="Threat coverage"
-            title="One layer. Every modality."
-            subtitle="Documents, images, video, audio, spreadsheets, text, and the links and encodings woven through all of them."
-          />
-          <Coverage />
-        </section>
-
+        {/* ATTACK CATALOG */}
         <section id="attacks" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
           <SectionHead
             eyebrow="Attack catalog"
@@ -62,6 +71,7 @@ export default function LandingPage() {
           <AttackCatalogInline />
         </section>
 
+        {/* GALLERY — caught-in-the-wild examples */}
         <section id="gallery" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
           <SectionHead
             eyebrow="Caught in the wild"
@@ -71,13 +81,55 @@ export default function LandingPage() {
           <Gallery />
         </section>
 
-        <section id="benefits" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
+        {/* BUSINESS VALUE — six industry use cases (slide 10) */}
+        <section id="business-value" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
           <SectionHead
             eyebrow="Business value"
-            title="Defence in depth, audit-ready."
+            title="Where it pays off."
+            subtitle="Six industries where an AI reads files supplied by someone other than the immediate user. Same pipeline, different threat shapes, same outcome."
+          />
+          <BusinessValue />
+        </section>
+
+        {/* BUSINESS BENEFITS — speed / cost / audit headlines */}
+        <section id="benefits" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
+          <SectionHead
+            eyebrow="Why teams ship it"
+            title="Faster, cheaper, audit-ready."
             subtitle="Faster than the LLM itself, cheaper than another API call, and structurally able to catch attacks the model can't see at all."
           />
           <BusinessBenefits />
+        </section>
+
+        {/* LIVE DEMO — moved to the bottom with a prominent CTA */}
+        <section id="demo" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
+          <SectionHead
+            eyebrow="Live demo"
+            title="See it block a hidden attack in real time."
+            subtitle="Drop a file, paste a prompt, or pick one of the bundled samples. Trapdoor walks you through every stage of the scan and shows exactly which detector fired and why."
+          />
+
+          <div className="text-center mb-10">
+            <Link
+              href="/scan"
+              className="
+                inline-flex items-center gap-3 rounded-xl px-8 py-4
+                text-base font-semibold text-white
+                bg-grad shadow-glow border border-white/15
+                hover:-translate-y-0.5 hover:shadow-[0_20px_56px_rgba(0,164,239,0.45)]
+                active:translate-y-0 transition-all duration-200 ease-out
+              "
+            >
+              <PlayCircle className="h-5 w-5" strokeWidth={2.2} />
+              Launch the scanner
+              <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
+            </Link>
+            <div className="mt-3 text-[12px] font-mono text-muted-dim">
+              No sign-up · runs against the live Azure backend · ~800 ms per scan
+            </div>
+          </div>
+
+          <CTATile />
         </section>
 
         <Taglines />
@@ -89,7 +141,7 @@ export default function LandingPage() {
 
         <footer className="max-w-[1280px] mx-auto px-7 py-10 flex flex-wrap items-center justify-between gap-3 border-t border-line text-xs text-muted font-mono">
           <div>Trapdoor · Multimodal prompt-injection defender</div>
-          <div>Stack: Next.js · FastAPI · Azure AI Foundry · Whisper</div>
+          <div>Stack: Next.js · FastAPI · Azure App Service · Azure SWA · AI Foundry · Whisper</div>
         </footer>
       </main>
     </>
