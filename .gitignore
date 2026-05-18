@@ -8,6 +8,10 @@
 *.env.local
 backend/.env
 **/secrets.*
+# Deployment tokens — Azure SWA, etc. Never commit these.
+.deploy-token
+*.token
+*.deploy-token
 
 # --- Python --------------------------------------------------
 __pycache__/
