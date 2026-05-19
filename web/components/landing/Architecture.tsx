@@ -309,47 +309,6 @@ export function Architecture() {
 
   return (
     <div className="space-y-16">
-      {/* ---------- TECHNOLOGIES ---------- */}
-      <div>
-        <h3 className="text-[15px] font-mono uppercase tracking-[0.15em] text-muted mb-6">
-          Technologies used
-        </h3>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {TECH_GROUPS.map((g, i) => {
-            const Icon = g.icon;
-            return (
-              <motion.div
-                key={g.label}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
-                className="glass rounded-xl border border-line p-5 hover:border-accent-blue/40 transition-colors"
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-grad text-white border border-white/15">
-                    <Icon size={15} />
-                  </span>
-                  <div className="text-[10.5px] font-mono uppercase tracking-[0.14em] text-muted">
-                    {g.label}
-                  </div>
-                </div>
-                <ul className="space-y-1.5">
-                  {g.items.map((item) => (
-                    <li
-                      key={item}
-                      className="text-[12.5px] text-white/90 leading-relaxed font-mono"
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-
       {/* hint */}
       <div className="text-[11px] font-mono uppercase tracking-wider text-muted-dim text-center">
         click any card for details
@@ -553,6 +512,47 @@ export function Architecture() {
               example="" />
           )}
         </AnimatePresence>
+      </div>
+
+      {/* ---------- TECHNOLOGIES ---------- */}
+      <div>
+        <h3 className="text-[15px] font-mono uppercase tracking-[0.15em] text-muted mb-6">
+          Technologies used
+        </h3>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {TECH_GROUPS.map((g, i) => {
+            const Icon = g.icon;
+            return (
+              <motion.div
+                key={g.label}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.4, delay: i * 0.05 }}
+                className="glass rounded-xl border border-line p-5 hover:border-accent-blue/40 transition-colors"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-grad text-white border border-white/15">
+                    <Icon size={15} />
+                  </span>
+                  <div className="text-[10.5px] font-mono uppercase tracking-[0.14em] text-muted">
+                    {g.label}
+                  </div>
+                </div>
+                <ul className="space-y-1.5">
+                  {g.items.map((item) => (
+                    <li
+                      key={item}
+                      className="text-[12.5px] text-white/90 leading-relaxed font-mono"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
