@@ -416,7 +416,7 @@ export function Architecture() {
       {/* ---------- DETECTORS ---------- */}
       <div>
         <h3 className="text-[15px] font-mono uppercase tracking-[0.15em] text-muted mb-6">
-          Ten independent detectors, two layers
+          10 independent detectors, 2 layers
         </h3>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {DETECTORS.map((d, i) => {
