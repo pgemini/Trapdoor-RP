@@ -9,7 +9,7 @@ interface Stat {
 }
 
 const STATS: Stat[] = [
-  { value: "$4.88M", label: "Avg cost of an AI-related breach (IBM 2024)" },
+  { value: "$5+M",   label: "Mean financial impact of an AI-related breach (IBM 2024)" },
   { value: "# 1",    label: "OWASP LLM Top 10 — Prompt Injection" },
   { value: "7 +",    label: "Modalities attackers smuggle text through" },
   { value: "0",      label: "Major LLM gateways scan all modalities today" },

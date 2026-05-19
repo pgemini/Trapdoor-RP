@@ -15,7 +15,7 @@ interface Stat {
 // Row 2 — capability surface (muted, secondary).
 const STATS: Stat[] = [
   // ── impact ──
-  { value: "$4.88M",  label: "Avg breach cost",  tone: "impact" },
+  { value: "$5+M",    label: "Mean breach impact",  tone: "impact" },
   { value: "98.4%",   label: "Detection rate",   tone: "impact" },
   { value: "$0",      label: "Per-scan cost",    tone: "impact" },
   { value: "<1200ms", label: "Avg scan time",    tone: "impact" },

@@ -308,7 +308,7 @@ function centredGrid({ cols, rows, cardW, cardH, gx, gy, startY, slideW = W }) {
   );
 
   const stats = [
-    { v: "$4.88M", l: "Avg cost of an AI-related breach (IBM 2024)" },
+    { v: "$5+M",   l: "Mean financial impact of an AI-related breach (IBM 2024)" },
     { v: "# 1",    l: "OWASP LLM Top 10 — Prompt Injection" },
     { v: "7 +",    l: "Modalities attackers smuggle text through" },
     { v: "0",      l: "Major LLM gateways scan all modalities today" },
@@ -781,7 +781,7 @@ function centredGrid({ cols, rows, cardW, cardH, gx, gy, startY, slideW = W }) {
   );
 
   const stats = [
-    { v: "$4.88M",  l: "Avoided per AI breach (IBM 2024)" },
+    { v: "$5+M",    l: "Loss avoided per AI breach (IBM 2024)" },
     { v: "60-90%",  l: "Less manual content review" },
     { v: "$0.0008", l: "Per scan in heuristic-only mode" },
     { v: "~12 wk",  l: "Typical payback period" },

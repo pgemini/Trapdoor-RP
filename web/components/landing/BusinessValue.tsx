@@ -20,7 +20,7 @@ interface CostStat {
 }
 
 const COST_STATS: CostStat[] = [
-  { value: "$4.88M", label: "Avoided per AI breach (IBM 2024)" },
+  { value: "$5+M",   label: "Loss avoided per AI breach (IBM 2024)" },
   { value: "60–90%", label: "Less manual content review" },
   { value: "$0.0008", label: "Per scan in heuristic-only mode" },
   { value: "~2–4 wk", label: "Typical implementation period" },
