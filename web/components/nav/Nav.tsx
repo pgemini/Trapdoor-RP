@@ -34,24 +34,14 @@ const SCAN_LINKS: NavLink[] = [
 
 function TechMahindraLogo() {
   return (
-    <div className="flex items-center gap-2 shrink-0" aria-label="Tech Mahindra">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/tech-mahindra.png"
-        alt=""
-        width={48}
-        height={24}
-        className="shrink-0 h-6 w-auto"
-      />
-      <div className="flex flex-col leading-[0.95]">
-        <span className="text-[13px] font-extrabold tracking-tight text-white uppercase">
-          Tech
-        </span>
-        <span className="text-[12px] font-medium tracking-tight text-[#E31837] lowercase">
-          mahindra
-        </span>
-      </div>
-    </div>
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img
+      src="/tech-mahindra.png"
+      alt="Tech Mahindra"
+      width={140}
+      height={28}
+      className="shrink-0 h-7 w-auto"
+    />
   );
 }
 
