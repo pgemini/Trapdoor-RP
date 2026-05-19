@@ -37,11 +37,11 @@ function TechMahindraLogo() {
     <div className="flex items-center gap-2 shrink-0" aria-label="Tech Mahindra">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/tech-mahindra-mark.svg"
+        src="/tech-mahindra.png"
         alt=""
-        width={34}
+        width={48}
         height={24}
-        className="shrink-0"
+        className="shrink-0 h-6 w-auto"
       />
       <div className="flex flex-col leading-[0.95]">
         <span className="text-[13px] font-extrabold tracking-tight text-white uppercase">
