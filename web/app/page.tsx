@@ -1,5 +1,6 @@
 import { Nav }                from "@/components/nav/Nav";
 import { Hero }               from "@/components/landing/Hero";
+import { Problem }            from "@/components/landing/Problem";
 import { Gallery }            from "@/components/landing/Gallery";
 import { Pipeline }           from "@/components/landing/Pipeline";
 import { Coverage }           from "@/components/landing/Coverage";
@@ -20,6 +21,11 @@ export default function LandingPage() {
       <Nav variant="landing" />
       <main>
         <Hero />
+
+        {/* THE PROBLEM — frame the threat right under the hero */}
+        <section id="problem" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
+          <Problem />
+        </section>
 
         {/* WHY INNOVATIVE — first impression after the hero */}
         <section id="innovation" className="max-w-[1280px] mx-auto px-7 py-24">

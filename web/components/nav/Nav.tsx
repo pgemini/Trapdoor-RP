@@ -16,6 +16,7 @@ interface NavLink {
 }
 
 const LANDING_LINKS: NavLink[] = [
+  { label: "Problem",      href: "#problem" },
   { label: "Why",          href: "#innovation" },
   { label: "Coverage",     href: "#coverage" },
   { label: "Architecture", href: "#architecture" },
