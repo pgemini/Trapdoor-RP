@@ -69,18 +69,6 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <div
-              className={cn(
-                "inline-flex items-center gap-2 rounded-full",
-                "border border-line-strong bg-white/5 px-3 py-1",
-                "text-[11px] font-mono font-semibold uppercase tracking-[0.18em]",
-                "text-white/85",
-              )}
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-accent-blue animate-pulse-glow shadow-[0_0_10px_rgba(0,164,239,0.8)]" />
-              AI Foundry · Multimodal Security Layer
-            </div>
-
             <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05] text-white">
               Hidden prompts.
               <br />

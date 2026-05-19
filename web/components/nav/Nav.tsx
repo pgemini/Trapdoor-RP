@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/util";
-import { BackendStatus } from "./BackendStatus";
 
 export interface NavProps {
   variant?: "landing" | "scan";
@@ -99,7 +98,6 @@ export function Nav({ variant = "landing" }: NavProps) {
         </nav>
 
         <div className="flex items-center gap-3">
-          <BackendStatus className="hidden sm:inline-flex" />
           <Link
             href="/scan"
             className={cn(
