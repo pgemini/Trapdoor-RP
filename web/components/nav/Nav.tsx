@@ -35,48 +35,15 @@ const SCAN_LINKS: NavLink[] = [
 function BrandMark() {
   return (
     <svg
-      width="72"
+      width="32"
       height="32"
-      viewBox="0 0 72 32"
+      viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      aria-label="Tech Mahindra · Trapdoor"
+      aria-label="Tech Mahindra"
       className="shrink-0"
     >
-      <defs>
-        <linearGradient id="td-brand" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#00a4ef" />
-          <stop offset="55%" stopColor="#7c5cff" />
-          <stop offset="100%" stopColor="#f25022" />
-        </linearGradient>
-      </defs>
-
-      {/* Tech Mahindra — red slanted parallelogram */}
       <polygon points="10,4 30,4 24,28 4,28" fill="#E31837" />
-
-      {/* divider */}
-      <line x1="36" y1="6" x2="36" y2="26" stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
-
-      {/* Trapdoor checkmark mark */}
-      <rect
-        x="42"
-        y="2"
-        width="28"
-        height="28"
-        rx="8"
-        fill="url(#td-brand)"
-        opacity="0.18"
-        stroke="url(#td-brand)"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M49 16.5 L54 21 L63 11"
-        stroke="url(#td-brand)"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
     </svg>
   );
 }
