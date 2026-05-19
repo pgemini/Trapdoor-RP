@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   Upload, FileSearch, Search, Calculator, Filter,
   Cpu, Zap, ShieldCheck, AlertTriangle, X, ChevronRight,
+  Layers, Server, Cloud, Type,
 } from "lucide-react";
 import { cn } from "@/lib/util";
 import { DetectorMatrix } from "./DetectorMatrix";
@@ -12,6 +13,40 @@ import { DetectorMatrix } from "./DetectorMatrix";
 // ============================================================
 //  DATA
 // ============================================================
+
+interface TechGroup {
+  label: string;
+  icon: typeof Upload;
+  items: string[];
+}
+
+const TECH_GROUPS: TechGroup[] = [
+  {
+    label: "Frontend",
+    icon: Layers,
+    items: ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "Framer Motion"],
+  },
+  {
+    label: "Backend",
+    icon: Server,
+    items: ["FastAPI", "Pydantic", "Python 3.11", "Uvicorn"],
+  },
+  {
+    label: "Extraction",
+    icon: Type,
+    items: ["pdfplumber", "python-docx", "Tesseract OCR", "mutagen", "openpyxl"],
+  },
+  {
+    label: "AI & vision",
+    icon: Cpu,
+    items: ["Azure AI Foundry", "GPT-4o-mini", "Azure Vision", "Whisper"],
+  },
+  {
+    label: "Hosting",
+    icon: Cloud,
+    items: ["Azure App Service", "Azure Static Web Apps", "Vercel", "Docker"],
+  },
+];
 
 interface DetailField { label: string; value: string }
 
@@ -275,6 +310,47 @@ export function Architecture() {
 
   return (
     <div className="space-y-16">
+      {/* ---------- TECHNOLOGIES ---------- */}
+      <div>
+        <h3 className="text-[15px] font-mono uppercase tracking-[0.15em] text-muted mb-6">
+          Technologies used
+        </h3>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {TECH_GROUPS.map((g, i) => {
+            const Icon = g.icon;
+            return (
+              <motion.div
+                key={g.label}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.4, delay: i * 0.05 }}
+                className="glass rounded-xl border border-line p-5 hover:border-accent-blue/40 transition-colors"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-grad text-white border border-white/15">
+                    <Icon size={15} />
+                  </span>
+                  <div className="text-[10.5px] font-mono uppercase tracking-[0.14em] text-muted">
+                    {g.label}
+                  </div>
+                </div>
+                <ul className="space-y-1.5">
+                  {g.items.map((item) => (
+                    <li
+                      key={item}
+                      className="text-[12.5px] text-white/90 leading-relaxed font-mono"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* hint */}
       <div className="text-[11px] font-mono uppercase tracking-wider text-muted-dim text-center">
         click any card for details

@@ -8,24 +8,17 @@ import { cn } from "@/lib/util";
 interface Stat {
   value: string;
   label: string;
-  tone: "problem" | "impact" | "capability";
+  tone: "impact" | "capability";
 }
 
-// Row 0 — problem-framing (red, smaller) — the threat landscape.
 // Row 1 — business-impact (blue accent, prominent).
 // Row 2 — capability surface (muted, secondary).
 const STATS: Stat[] = [
-  // ── problem ──
-  { value: "1",   label: "OWASP LLM Top 10 rank",   tone: "problem" },
-  { value: "10",  label: "OWASP LLM Top 10 (2025)", tone: "problem" },
-  { value: "77",  label: "% enterprises hit",       tone: "problem" },
-  { value: "10.5",label: "$T annual cybercrime",    tone: "problem" },
-
   // ── impact ──
-  { value: "$4.88M", label: "Avg breach cost",  tone: "impact" },
-  { value: "98.4%",  label: "Detection rate",   tone: "impact" },
-  { value: "$0",     label: "Per-scan cost",    tone: "impact" },
-  { value: "<800ms", label: "Avg scan time",    tone: "impact" },
+  { value: "$4.88M",  label: "Avg breach cost",  tone: "impact" },
+  { value: "98.4%",   label: "Detection rate",   tone: "impact" },
+  { value: "$0",      label: "Per-scan cost",    tone: "impact" },
+  { value: "<1200ms", label: "Avg scan time",    tone: "impact" },
 
   // ── capability ──
   { value: "10",     label: "Detectors",            tone: "capability" },
@@ -132,34 +125,6 @@ export function Hero() {
             </div>
 
             <div className="mt-10 space-y-3">
-              {/* Row 0 · problem framing (danger-tinted, slim) */}
-              <div className="rounded-xl border border-sev-danger/30 bg-sev-danger/[0.04] px-3 py-2.5">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-sev-danger animate-pulse" />
-                  <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-sev-danger">
-                    The problem
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:grid-cols-4">
-                  {STATS.filter(s => s.tone === "problem").map((s, i) => (
-                    <motion.div
-                      key={s.label}
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: 0.1 + i * 0.05 }}
-                      className="flex items-baseline gap-2 min-w-0"
-                    >
-                      <span className="font-mono text-[13px] font-bold text-sev-danger shrink-0">
-                        {s.value}
-                      </span>
-                      <span className="text-[10.5px] font-mono uppercase tracking-wider text-white/85 truncate">
-                        {s.label}
-                      </span>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
               {/* Row 1 · impact metrics (brand-accent, prominent) */}
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {STATS.filter(s => s.tone === "impact").map((s, i) => (

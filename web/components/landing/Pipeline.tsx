@@ -82,7 +82,7 @@ export function Pipeline() {
             How it works
           </div>
           <h2 className="mt-4 text-3xl md:text-4xl font-semibold tracking-tight text-white">
-            Five stages, one safe context.
+            5 stages, one safe context.
           </h2>
           <p className="mt-3 text-[15px] text-muted leading-relaxed">
             Every file flows through the same deterministic pipeline. Each

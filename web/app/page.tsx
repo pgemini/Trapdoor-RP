@@ -1,6 +1,5 @@
 import { Nav }                from "@/components/nav/Nav";
 import { Hero }               from "@/components/landing/Hero";
-import { CTATile }            from "@/components/landing/CTATile";
 import { Gallery }            from "@/components/landing/Gallery";
 import { Pipeline }           from "@/components/landing/Pipeline";
 import { Coverage }           from "@/components/landing/Coverage";
@@ -35,7 +34,7 @@ export default function LandingPage() {
         <section id="coverage" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
           <SectionHead
             eyebrow="Threat coverage"
-            title="Seven modalities. Ten detectors. One safe context."
+            title="7 modalities. 10 detectors. One safe context."
             subtitle="Documents, images, video, audio, spreadsheets, text, and the links and encodings woven through all of them — each gets the same deterministic pipeline."
           />
           <Coverage />
@@ -65,21 +64,29 @@ export default function LandingPage() {
               <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
             </Link>
             <div className="mt-3 text-[12px] font-mono text-muted-dim">
-              No sign-up · runs against the live Azure backend · ~800 ms per scan
+              No sign-up · runs against the live Azure backend · ~1200 ms per scan
             </div>
           </div>
-
-          <CTATile />
         </section>
 
         {/* TECH STACK & ARCHITECTURE — the interactive walkthrough */}
         <section id="architecture" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
           <SectionHead
             eyebrow="Tech stack & architecture"
-            title="Five stages. Ten detectors. One safe context."
+            title="5 stages. 10 detectors. One safe context."
             subtitle="Every uploaded file flows through the same deterministic pipeline. Each stage emits a timed result; click any card to see what it does, what it produces, and the exact attack it stops."
           />
           <Architecture />
+        </section>
+
+        {/* BUSINESS VALUE — six industry use cases (slide 10) */}
+        <section id="business-value" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
+          <SectionHead
+            eyebrow="Business value"
+            title="Where it pays off."
+            subtitle="Six industries where an AI reads files supplied by someone other than the immediate user. Same pipeline, different threat shapes, same outcome."
+          />
+          <BusinessValue />
         </section>
 
         {/* PIPELINE — high-level 5-stage strip (kept for the spec mention) */}
@@ -110,16 +117,6 @@ export default function LandingPage() {
             subtitle="Real-world attack patterns Trapdoor recognises across modalities."
           />
           <Gallery />
-        </section>
-
-        {/* BUSINESS VALUE — six industry use cases (slide 10) */}
-        <section id="business-value" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
-          <SectionHead
-            eyebrow="Business value"
-            title="Where it pays off."
-            subtitle="Six industries where an AI reads files supplied by someone other than the immediate user. Same pipeline, different threat shapes, same outcome."
-          />
-          <BusinessValue />
         </section>
 
         {/* BUSINESS BENEFITS — speed / cost / audit headlines */}
