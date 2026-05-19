@@ -10,6 +10,7 @@ import { Architecture }       from "@/components/landing/Architecture";
 import { DetectorMatrix }     from "@/components/landing/DetectorMatrix";
 import { BusinessBenefits }   from "@/components/landing/BusinessBenefits";
 import { BusinessValue }      from "@/components/landing/BusinessValue";
+import { Roadmap }            from "@/components/landing/Roadmap";
 import { WhyInnovative }      from "@/components/landing/WhyInnovative";
 import { AttackCatalogInline } from "@/components/landing/AttackCatalogInline";
 import Link from "next/link";
@@ -94,6 +95,16 @@ export default function LandingPage() {
             subtitle="Six industries where an AI reads files supplied by someone other than the immediate user. Same pipeline, different threat shapes, same outcome."
           />
           <BusinessValue />
+        </section>
+
+        {/* ROADMAP */}
+        <section id="roadmap" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
+          <SectionHead
+            eyebrow="Roadmap"
+            title="Where Trapdoor goes next."
+            subtitle="What's shipped today, what we're integrating into Copilot next, and the adaptive layer that improvises against new attack shapes."
+          />
+          <Roadmap />
         </section>
 
         {/* DETECTOR ↔ ATTACK MATRIX */}

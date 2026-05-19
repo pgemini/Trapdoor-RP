@@ -18,10 +18,9 @@ interface NavLink {
 const LANDING_LINKS: NavLink[] = [
   { label: "Problem",      href: "#problem" },
   { label: "Why",          href: "#innovation" },
-  { label: "Coverage",     href: "#coverage" },
   { label: "Architecture", href: "#architecture" },
-  { label: "Attacks",      href: "#attacks" },
   { label: "Use cases",    href: "#business-value" },
+  { label: "Roadmap",      href: "#roadmap" },
   { label: "Demo",         href: "#demo" },
 ];
 
@@ -35,16 +34,16 @@ const SCAN_LINKS: NavLink[] = [
 
 function TechMahindraLogo() {
   return (
-    <div className="flex items-center gap-1.5 shrink-0" aria-label="Tech Mahindra">
+    <div className="flex items-center gap-2 shrink-0" aria-label="Tech Mahindra">
       <svg
-        width="22"
-        height="26"
-        viewBox="0 0 22 26"
+        width="34"
+        height="24"
+        viewBox="0 0 48 33"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
       >
-        <polygon points="7,2 22,2 15,24 0,24" fill="#E31837" />
+        <polygon points="5,0 48,0 43,33 0,33" fill="#E31837" />
       </svg>
       <div className="flex flex-col leading-[0.95]">
         <span className="text-[13px] font-extrabold tracking-tight text-[#E31837] uppercase">
