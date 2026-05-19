@@ -1,174 +1,91 @@
 "use client";
 
+import { useMemo } from "react";
 import { motion } from "framer-motion";
+import { ATTACKS } from "@/lib/attackCatalog";
 import { cn } from "@/lib/util";
 
 interface CoverageItem {
   emoji: string;
   title: string;
-  items: string[];
+  /** Catalog modality keys folded into this card (used to compute the count). */
+  modalityKeys: string[];
+  /** Tag-line under the count. */
+  tagline: string;
 }
 
 const COVERAGE: CoverageItem[] = [
-  {
-    emoji: "📄",
-    title: "Documents",
-    items: [
-      "white/invisible text",
-      "hidden HTML comments",
-      "tracked changes & comments",
-      "metadata & XMP injection",
-      "BIDI overrides (Trojan Source)",
-    ],
-  },
-  {
-    emoji: "🖼️",
-    title: "Images",
-    items: [
-      "OCR overlays",
-      "low-contrast steganography",
-      "LSB-encoded payloads",
-      "EXIF instruction fields",
-      "<script>/SSTI rendered as graphics",
-    ],
-  },
-  {
-    emoji: "🎬",
-    title: "Video",
-    items: [
-      "single-frame injections",
-      "subtitle & CC payloads",
-      "audio-track override",
-      "sampled vision scanning",
-      "markup leaking via transcript",
-    ],
-  },
-  {
-    emoji: "🎧",
-    title: "Audio",
-    items: [
-      "ID3 / Vorbis / RIFF INFO tags",
-      "MP4 atom metadata",
-      "spoken content via Whisper",
-      "podcast transcripts",
-      "instructions hidden in tag fields",
-    ],
-  },
-  {
-    emoji: "📊",
-    title: "Spreadsheets",
-    items: [
-      "cell injections",
-      "cell comments",
-      "named ranges",
-      "workbook properties, formula vectors",
-      "encoded payloads in cell text",
-    ],
-  },
-  {
-    emoji: "🧾",
-    title: "Text & Markdown",
-    items: [
-      "zero-width chars + tag-character carriers",
-      "Unicode look-alikes + math-style disguises",
-      "role-spoofing prefixes",
-      "jailbreak / DAN / god-mode templates",
-      "homograph URLs · javascript: links · data: URIs",
-    ],
-  },
-  {
-    emoji: "🔗",
-    title: "Links & encodings",
-    items: [
-      "punycode hosts (xn--…) decoded + re-checked",
-      "raw-IP URLs · URL shorteners",
-      "?api_key= / ?bearer= query strings",
-      "base64 / hex / ROT13 unwrapped recursively",
-      "javascript: / executable data: URIs",
-    ],
-  },
+  { emoji: "📄", title: "Documents",        modalityKeys: ["pdf", "docx"],     tagline: "PDF · DOCX" },
+  { emoji: "🖼️", title: "Images",           modalityKeys: ["image"],            tagline: "PNG · JPG · WEBP · GIF" },
+  { emoji: "🎬", title: "Video",            modalityKeys: ["video"],            tagline: "MP4 · MOV · WEBM · MKV" },
+  { emoji: "🎧", title: "Audio",            modalityKeys: ["audio"],            tagline: "MP3 · WAV · FLAC · M4A" },
+  { emoji: "📊", title: "Spreadsheets",     modalityKeys: ["spreadsheet"],      tagline: "XLSX · XLSM" },
+  { emoji: "🧾", title: "Text & Markdown",  modalityKeys: ["text", "markdown"], tagline: "TXT · MD · HTML · JSON · CSV" },
+  // Cross-cutting modality — counted by attacks whose mechanism is link/encoding
+  // even if surfaced through one of the other file types.
+  { emoji: "🔗", title: "Links & encodings", modalityKeys: ["__cross"],          tagline: "Across every other modality" },
 ];
 
+// Attack-category IDs that are "links/encodings" by mechanism
+// (the catalog uses modalities for *delivery*, not mechanism).
+const CROSS_LINKS_ENCODINGS = new Set([
+  "encoded_payload", "homograph_url",
+]);
+
 export function Coverage() {
+  const counts = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (const c of COVERAGE) {
+      if (c.modalityKeys[0] === "__cross") {
+        map[c.title] = ATTACKS.filter(a => CROSS_LINKS_ENCODINGS.has(a.id)).length;
+        continue;
+      }
+      const keys = new Set(c.modalityKeys);
+      map[c.title] = ATTACKS.filter(a => a.modalities.some(m => keys.has(m))).length;
+    }
+    return map;
+  }, []);
+
   return (
-    <section
-      id="coverage"
-      className="relative border-b border-line bg-bg-elevated/40"
+    <div
+      className="grid gap-4"
+      style={{
+        gridTemplateColumns:
+          "repeat(auto-fit, minmax(min(220px, 100%), 1fr))",
+      }}
     >
-      <div className="mx-auto max-w-[1280px] px-5 py-16 md:px-8 md:py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5 }}
-          className="max-w-2xl"
-        >
-          <div
+      {COVERAGE.map((c, i) => {
+        const n = counts[c.title];
+        return (
+          <motion.div
+            key={c.title}
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.4, delay: i * 0.05 }}
+            whileHover={{ y: -3 }}
             className={cn(
-              "inline-flex items-center gap-2 rounded-full",
-              "border border-line-strong bg-white/5 px-3 py-1",
-              "text-[10px] font-mono font-semibold uppercase tracking-[0.18em]",
-              "text-white/85",
+              "glass rounded-xl p-6 text-center",
+              "border-line hover:border-accent-blue/40 transition-colors",
             )}
           >
-            Coverage
-          </div>
-          <h2 className="mt-4 text-3xl md:text-4xl font-semibold tracking-tight text-white">
-            Seven modalities. Ten detectors. One safe context.
-          </h2>
-          <p className="mt-3 text-[15px] text-muted leading-relaxed">
-            Every modality has its own bag of injection tricks. Trapdoor ships
-            with detectors purpose-built for each — and a resilience layer
-            (encoding, BIDI, URL, markup) for the attacks the model itself
-            can&apos;t see.
-          </p>
-        </motion.div>
-
-        <div
-          className="mt-10 grid gap-4"
-          style={{
-            gridTemplateColumns:
-              "repeat(auto-fit, minmax(min(220px, 100%), 1fr))",
-          }}
-        >
-          {COVERAGE.map((c, i) => (
-            <motion.div
-              key={c.title}
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-              whileHover={{ y: -3 }}
-              className={cn(
-                "glass rounded-xl p-5",
-                "border-line hover:border-white/15 transition-colors",
-              )}
-            >
-              <div className="text-3xl leading-none">{c.emoji}</div>
-              <h3 className="mt-3 text-[15px] font-semibold tracking-tight text-white">
-                {c.title}
-              </h3>
-              <ul className="mt-3 space-y-1.5">
-                {c.items.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-2 text-[12.5px] text-muted leading-snug"
-                  >
-                    <span
-                      className={cn(
-                        "mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full",
-                        "bg-accent-blue shadow-[0_0_6px_rgba(0,164,239,0.6)]",
-                      )}
-                    />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
+            <div className="text-4xl leading-none mb-3">{c.emoji}</div>
+            <div className="text-[44px] font-extrabold tracking-tight bg-gradient-to-br from-white to-[#a0d5ff] bg-clip-text text-transparent leading-none">
+              {n}
+            </div>
+            <div className="mt-1.5 text-[10px] font-mono uppercase tracking-[0.14em] text-muted">
+              attack vectors
+            </div>
+            <div className="mt-4 text-[15px] font-semibold tracking-tight text-white">
+              {c.title}
+            </div>
+            <div className="mt-1 text-[11px] font-mono text-muted-dim">
+              {c.tagline}
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
   );
 }
 

@@ -41,6 +41,37 @@ export default function LandingPage() {
           <Coverage />
         </section>
 
+        {/* LIVE DEMO — moved above Architecture: see the thing first, then learn how it works */}
+        <section id="demo" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
+          <SectionHead
+            eyebrow="Live demo"
+            title="See it block a hidden attack in real time."
+            subtitle="Drop a file, paste a prompt, or pick one of the bundled samples. Trapdoor walks you through every stage of the scan and shows exactly which detector fired and why."
+          />
+
+          <div className="text-center mb-10">
+            <Link
+              href="/scan"
+              className="
+                inline-flex items-center gap-3 rounded-xl px-8 py-4
+                text-base font-semibold text-white
+                bg-grad shadow-glow border border-white/15
+                hover:-translate-y-0.5 hover:shadow-[0_20px_56px_rgba(0,164,239,0.45)]
+                active:translate-y-0 transition-all duration-200 ease-out
+              "
+            >
+              <PlayCircle className="h-5 w-5" strokeWidth={2.2} />
+              Launch the scanner
+              <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
+            </Link>
+            <div className="mt-3 text-[12px] font-mono text-muted-dim">
+              No sign-up · runs against the live Azure backend · ~800 ms per scan
+            </div>
+          </div>
+
+          <CTATile />
+        </section>
+
         {/* TECH STACK & ARCHITECTURE — the interactive walkthrough */}
         <section id="architecture" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
           <SectionHead
@@ -99,37 +130,6 @@ export default function LandingPage() {
             subtitle="Faster than the LLM itself, cheaper than another API call, and structurally able to catch attacks the model can't see at all."
           />
           <BusinessBenefits />
-        </section>
-
-        {/* LIVE DEMO — moved to the bottom with a prominent CTA */}
-        <section id="demo" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
-          <SectionHead
-            eyebrow="Live demo"
-            title="See it block a hidden attack in real time."
-            subtitle="Drop a file, paste a prompt, or pick one of the bundled samples. Trapdoor walks you through every stage of the scan and shows exactly which detector fired and why."
-          />
-
-          <div className="text-center mb-10">
-            <Link
-              href="/scan"
-              className="
-                inline-flex items-center gap-3 rounded-xl px-8 py-4
-                text-base font-semibold text-white
-                bg-grad shadow-glow border border-white/15
-                hover:-translate-y-0.5 hover:shadow-[0_20px_56px_rgba(0,164,239,0.45)]
-                active:translate-y-0 transition-all duration-200 ease-out
-              "
-            >
-              <PlayCircle className="h-5 w-5" strokeWidth={2.2} />
-              Launch the scanner
-              <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
-            </Link>
-            <div className="mt-3 text-[12px] font-mono text-muted-dim">
-              No sign-up · runs against the live Azure backend · ~800 ms per scan
-            </div>
-          </div>
-
-          <CTATile />
         </section>
 
         <Taglines />
