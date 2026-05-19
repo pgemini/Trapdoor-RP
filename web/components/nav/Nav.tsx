@@ -47,8 +47,6 @@ function TechMahindraLogo() {
 
 export function Nav({ variant = "landing" }: NavProps) {
   const links = variant === "landing" ? LANDING_LINKS : SCAN_LINKS;
-  const subtitle =
-    variant === "landing" ? "Multimodal injection defender" : "Scanner";
 
   return (
     <header
@@ -65,14 +63,9 @@ export function Nav({ variant = "landing" }: NavProps) {
         >
           <TechMahindraLogo />
           <span className="h-7 w-px bg-white/15 shrink-0" aria-hidden="true" />
-          <div className="flex flex-col leading-tight">
-            <span className="text-[15px] font-semibold tracking-tight text-white">
-              Trapdoor
-            </span>
-            <span className="text-[10px] uppercase tracking-[0.18em] text-muted font-mono">
-              {subtitle}
-            </span>
-          </div>
+          <span className="text-[18px] font-extrabold tracking-wide uppercase text-white leading-none">
+            Trapdoor
+          </span>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1">
