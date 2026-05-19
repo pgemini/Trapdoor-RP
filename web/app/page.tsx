@@ -1,6 +1,5 @@
 import { Nav }                from "@/components/nav/Nav";
 import { Hero }               from "@/components/landing/Hero";
-import { CTATile }            from "@/components/landing/CTATile";
 import { Gallery }            from "@/components/landing/Gallery";
 import { Pipeline }           from "@/components/landing/Pipeline";
 import { Coverage }           from "@/components/landing/Coverage";
@@ -68,8 +67,6 @@ export default function LandingPage() {
               No sign-up · runs against the live Azure backend · ~1200 ms per scan
             </div>
           </div>
-
-          <CTATile />
         </section>
 
         {/* TECH STACK & ARCHITECTURE — the interactive walkthrough */}
