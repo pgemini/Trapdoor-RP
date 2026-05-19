@@ -16,10 +16,10 @@ interface Stat {
 // Row 2 — capability surface (muted, secondary).
 const STATS: Stat[] = [
   // ── problem ──
-  { value: "#1 LLM01",       label: "OWASP LLM Top 10",  tone: "problem" },
-  { value: "CVE-2021-42574", label: "Trojan Source",     tone: "problem" },
-  { value: "77%",            label: "Enterprises hit",   tone: "problem" },
-  { value: "$10.5T",         label: "Annual cybercrime", tone: "problem" },
+  { value: "1",   label: "OWASP LLM Top 10 rank",   tone: "problem" },
+  { value: "10",  label: "OWASP LLM Top 10 (2025)", tone: "problem" },
+  { value: "77",  label: "% enterprises hit",       tone: "problem" },
+  { value: "10.5",label: "$T annual cybercrime",    tone: "problem" },
 
   // ── impact ──
   { value: "$4.88M", label: "Avg breach cost",  tone: "impact" },
