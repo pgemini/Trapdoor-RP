@@ -32,19 +32,28 @@ const SCAN_LINKS: NavLink[] = [
   { label: "Use cases",    href: "/#business-value",   external: true },
 ];
 
-function BrandMark() {
+function TechMahindraLogo() {
   return (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-label="Tech Mahindra"
-      className="shrink-0"
-    >
-      <polygon points="10,4 30,4 24,28 4,28" fill="#E31837" />
-    </svg>
+    <div className="flex items-center gap-1.5 shrink-0" aria-label="Tech Mahindra">
+      <svg
+        width="22"
+        height="26"
+        viewBox="0 0 22 26"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <polygon points="7,2 22,2 15,24 0,24" fill="#E31837" />
+      </svg>
+      <div className="flex flex-col leading-[0.95]">
+        <span className="text-[13px] font-extrabold tracking-tight text-[#E31837] uppercase">
+          Tech
+        </span>
+        <span className="text-[12px] font-medium tracking-tight text-[#E31837] lowercase">
+          mahindra
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -66,7 +75,8 @@ export function Nav({ variant = "landing" }: NavProps) {
           href="/"
           className="group flex items-center gap-3 outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60 rounded-md"
         >
-          <BrandMark />
+          <TechMahindraLogo />
+          <span className="h-7 w-px bg-white/15 shrink-0" aria-hidden="true" />
           <div className="flex flex-col leading-tight">
             <span className="text-[15px] font-semibold tracking-tight text-white">
               Trapdoor
