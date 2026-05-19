@@ -106,7 +106,7 @@ interface ProofPoint {
 const PROOF: ProofPoint[] = [
   { label: "Modalities covered",  value: "7",    detail: "PDF · DOCX · image · audio · video · spreadsheet · text/markdown" },
   { label: "Attack categories",   value: "17",   detail: "across the resilience layer + AI classifier" },
-  { label: "Median scan time",    value: "<800 ms", detail: "for a typical document on free-tier compute" },
+  { label: "Median scan time",    value: "<1200 ms", detail: "for a typical document on free-tier compute" },
   { label: "Detection coverage",  value: "98.4%", detail: "on Trapdoor's published attack corpus" },
   { label: "Per-scan API cost",   value: "$0",   detail: "in heuristic mode · ~$0.0002 with AI classifier on" },
   { label: "Languages supported", value: "Any",  detail: "structural detectors are language-agnostic" },
