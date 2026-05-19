@@ -34,26 +34,37 @@ const SCAN_LINKS: NavLink[] = [
 
 function TechMahindraLogo() {
   return (
-    <div className="flex items-center gap-2 shrink-0" aria-label="Tech Mahindra">
-      <svg
-        width="34"
-        height="24"
-        viewBox="0 0 48 33"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
+    <svg
+      width="124"
+      height="34"
+      viewBox="0 0 124 34"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Tech Mahindra"
+      className="shrink-0"
+    >
+      <polygon points="6,2 48,2 42,32 0,32" fill="#E31837" />
+      <text
+        x="56" y="16"
+        fill="#ffffff"
+        fontFamily="Inter, system-ui, sans-serif"
+        fontSize="13"
+        fontWeight="800"
+        letterSpacing="0.5"
       >
-        <polygon points="5,0 48,0 43,33 0,33" fill="#E31837" />
-      </svg>
-      <div className="flex flex-col leading-[0.95]">
-        <span className="text-[13px] font-extrabold tracking-tight text-[#E31837] uppercase">
-          Tech
-        </span>
-        <span className="text-[12px] font-medium tracking-tight text-[#E31837] lowercase">
-          mahindra
-        </span>
-      </div>
-    </div>
+        TECH
+      </text>
+      <text
+        x="56" y="30"
+        fill="#E31837"
+        fontFamily="Inter, system-ui, sans-serif"
+        fontSize="13"
+        fontWeight="500"
+        letterSpacing="0.2"
+      >
+        mahindra
+      </text>
+    </svg>
   );
 }
 
