@@ -28,17 +28,7 @@ export default function LandingPage() {
           <Problem />
         </section>
 
-        {/* WHY INNOVATIVE — first impression after the hero */}
-        <section id="innovation" className="max-w-[1280px] mx-auto px-7 py-24">
-          <SectionHead
-            eyebrow="Why this is innovative"
-            title="Defence at the layer the LLM can't see."
-            subtitle="Most model-safety tooling lives inside the model. Trapdoor lives in front of it, with detectors that reason about codepoints, bytes, and channels — not just words."
-          />
-          <WhyInnovative />
-        </section>
-
-        {/* COVERAGE — moved up so the modality-vs-defence story lands early */}
+        {/* COVERAGE — threats by modality, sits next to the Problem framing */}
         <section id="coverage" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
           <SectionHead
             eyebrow="Threat coverage"
@@ -46,6 +36,16 @@ export default function LandingPage() {
             subtitle="Documents, images, video, audio, spreadsheets, text, and the links and encodings woven through all of them — each gets the same deterministic pipeline."
           />
           <Coverage />
+        </section>
+
+        {/* WHY INNOVATIVE — sits after the threat picture so the angle reads clearly */}
+        <section id="innovation" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
+          <SectionHead
+            eyebrow="Why this is innovative"
+            title="Defence at the layer the LLM can't see."
+            subtitle="Most model-safety tooling lives inside the model. Trapdoor lives in front of it, with detectors that reason about codepoints, bytes, and channels — not just words."
+          />
+          <WhyInnovative />
         </section>
 
         {/* LIVE DEMO — moved above Architecture: see the thing first, then learn how it works */}
