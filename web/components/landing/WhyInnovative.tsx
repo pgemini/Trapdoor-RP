@@ -10,13 +10,11 @@ interface Innovation {
   icon: typeof EyeOff;
   title: string;
   body: string;
-  metric: string;
 }
 
 const POINTS: Innovation[] = [
   {
     icon: EyeOff,
-    metric: "9 / 10",
     title: "Catches what the model can't see",
     body:
       "Invisible PDF text, zero-width chars, BIDI overrides, encoded payloads, " +
@@ -26,7 +24,6 @@ const POINTS: Innovation[] = [
   },
   {
     icon: Network,
-    metric: "10 detectors",
     title: "Ten independent verdicts, not one",
     body:
       "Each detector reasons about a different axis of attack — vocabulary, " +
@@ -36,7 +33,6 @@ const POINTS: Innovation[] = [
   },
   {
     icon: GaugeCircle,
-    metric: "<50 ms",
     title: "Faster than a single LLM call",
     body:
       "Nine of the ten detectors are regex / unicode / parsing logic — no GPU, " +
@@ -46,7 +42,6 @@ const POINTS: Innovation[] = [
   },
   {
     icon: ShieldOff,
-    metric: "Air-gapped",
     title: "Works offline, by design",
     body:
       "Default mode requires no external service. Drop it into a regulated " +
@@ -56,7 +51,6 @@ const POINTS: Innovation[] = [
   },
   {
     icon: FileCheck,
-    metric: "Finding[]",
     title: "Auditable, not opaque",
     body:
       "Every block is backed by a finding record — detector, category, severity, " +
@@ -66,7 +60,6 @@ const POINTS: Innovation[] = [
   },
   {
     icon: Languages,
-    metric: "Any language",
     title: "Language-agnostic detectors",
     body:
       "Structural checks (unicode, invisible text, bidi, url, markup, " +
@@ -98,9 +91,6 @@ export function WhyInnovative() {
                 <Icon size={18} className="text-white" />
               </div>
               <div className="min-w-0">
-                <div className="font-mono text-[11px] text-accent-blue tracking-wider mb-0.5">
-                  {p.metric}
-                </div>
                 <div className="text-[15px] font-semibold tracking-tight text-white leading-snug">
                   {p.title}
                 </div>
