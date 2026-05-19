@@ -6,6 +6,7 @@ import { Coverage }           from "@/components/landing/Coverage";
 import { Taglines }           from "@/components/landing/Taglines";
 import { Team }               from "@/components/landing/Team";
 import { Architecture }       from "@/components/landing/Architecture";
+import { DetectorMatrix }     from "@/components/landing/DetectorMatrix";
 import { BusinessBenefits }   from "@/components/landing/BusinessBenefits";
 import { BusinessValue }      from "@/components/landing/BusinessValue";
 import { WhyInnovative }      from "@/components/landing/WhyInnovative";
@@ -87,6 +88,16 @@ export default function LandingPage() {
             subtitle="Six industries where an AI reads files supplied by someone other than the immediate user. Same pipeline, different threat shapes, same outcome."
           />
           <BusinessValue />
+        </section>
+
+        {/* DETECTOR ↔ ATTACK MATRIX */}
+        <section id="matrix" className="max-w-[1280px] mx-auto px-7 py-24 border-t border-line">
+          <SectionHead
+            eyebrow="Detector ↔ attack connections"
+            title="Which detector catches which attack."
+            subtitle="Hover or click any row or column to highlight its connections."
+          />
+          <DetectorMatrix />
         </section>
 
         {/* PIPELINE — high-level 5-stage strip (kept for the spec mention) */}

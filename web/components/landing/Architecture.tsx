@@ -8,7 +8,6 @@ import {
   Layers, Server, Cloud, Type,
 } from "lucide-react";
 import { cn } from "@/lib/util";
-import { DetectorMatrix } from "./DetectorMatrix";
 
 // ============================================================
 //  DATA
@@ -489,11 +488,6 @@ export function Architecture() {
               example={selectedDetector.example} />
           )}
         </AnimatePresence>
-      </div>
-
-      {/* ---------- DETECTOR ↔ ATTACK MATRIX ---------- */}
-      <div>
-        <DetectorMatrix />
       </div>
 
       {/* ---------- VERDICTS ---------- */}
